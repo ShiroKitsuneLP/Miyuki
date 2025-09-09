@@ -1,0 +1,25 @@
+{
+  "name": "miyuki",
+  "version": "1.0.0",
+  "description": "Discord Bot",
+  "main": "src/miyuki.js",
+  "scripts": {
+    "start": "node src/miyuki.js",
+    "dev": "nodemon --trace-warnings src/miyuki.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ShiroKitsuneLP/Miyuki.git"
+  },
+  "keywords": [],
+  "author": "ShiroKtsune",
+  "license": "",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/ShiroKitsuneLP/Miyuki/issues"
+  },
+  "homepage": "https://github.com/ShiroKitsuneLP/Miyuki#readme",
+  "dependencies": {
+    "discord.js": "^14.22.1"
+  }
+}
