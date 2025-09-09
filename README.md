@@ -59,11 +59,11 @@ Want a fox companion for your Discord server without hosting it yourself?
    ```
 
 3. **Add your configuration**
-   - Create a `config.json` file in the `config` folder:
+    - Create a `config.json` file in the `config` folder:
      ```json
      {
        "discord": {
-         "token": "YOUR_DISCORD_BOT_TOKEN"
+            "token": "YOUR_DISCORD_BOT_TOKEN"
        }
      }
      ```
@@ -79,4 +79,4 @@ Want a fox companion for your Discord server without hosting it yourself?
 
 Feel free to get inspired by Miyuki or use small parts of the code for your own projects.  
 Please do **not** copy the entire bot or claim it as your own.  
-If you have questions or want to use more, just
+If you have questions or want to use more, **just send me a message!**
