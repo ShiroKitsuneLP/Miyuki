@@ -1,7 +1,7 @@
 # Miyuki 🦊
 
 **Miyuki** is a clever and friendly fox-themed Discord bot built with [discord.js](https://discord.js.org/).  
-Bring a touch of fox magic to your server with fun features and easy customization!
+Bring a touch of fox magic to your server with fun features!
 
 > **Note:** Miyuki is still in early development! Many features are planned and coming soon. Stay tuned for updates!
 
@@ -63,7 +63,9 @@ Want a fox companion for your Discord server without hosting it yourself?
      ```json
      {
        "discord": {
-            "token": "YOUR_DISCORD_BOT_TOKEN"
+            "token": "YOUR_DISCORD_BOT_TOKEN",
+            "clientId": "YOUR_BOT_CLIENT_ID",
+            "guildId": "YOUR_GUILD_ID"
        }
      }
      ```

@@ -1,5 +1,7 @@
-// Import required classes from discord.js
+// Import necessary classes from discord.js
 const { Client, Collection, GatewayIntentBits } = require('discord.js');
+
+// Import nasessary modules
 const fs = require('fs');
 const path = require('path');
 
@@ -16,7 +18,27 @@ const miyuki = new Client({
 });
 
 // Initialize collections for events
+miyuki.commands = new Collection();
 miyuki.events = new Collection();
+
+//Define paths to commands folders
+const commandsFolderPath = path.join(__dirname, 'commands');
+const commandFolders = fs.readdirSync(commandsFolderPath);
+
+// Load command files
+for (const folder of commandFolders) {
+    const commandsPath = path.join(commandsFolderPath, folder);
+    const commandFiles = fs.readdirSync(commandsPath).filter(file => file.endsWith('.js'));
+    for (const file of commandFiles) {
+        const filePath = path.join(commandsPath, file);
+        const command = require(filePath);
+        if ('data' in command && 'execute' in command) {
+            miyuki.commands.set(command.data.name, command);
+        } else {
+            console.log(`[WARNING] The command at ${filePath} is missing a required "data" or "execute" property.`);
+        }
+    }
+}
 
 // Define paths to events folders
 const eventsFolderPath = path.join(__dirname, 'events');

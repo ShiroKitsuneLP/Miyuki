@@ -5,6 +5,8 @@
   "main": "src/miyuki.js",
   "scripts": {
     "start": "node src/miyuki.js",
+    "deploy:global": "node src/deploy-commands.js --global",
+    "deploy:guild": "node src/deploy-commands.js --guild",
     "dev": "nodemon --trace-warnings src/miyuki.js"
   },
   "repository": {
