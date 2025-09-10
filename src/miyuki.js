@@ -5,13 +5,14 @@ const { Client, Collection, GatewayIntentBits } = require('discord.js');
 const fs = require('fs');
 const path = require('path');
 
-// Load Discord token from config.json
+// Import Discord token from config.json
 const { discord } = require('./config/config.json');
 
 // Create a new Discord client with the necessary intents
 const miyuki = new Client({
     intents: [
         GatewayIntentBits.Guilds,
+        GatewayIntentBits.GuildMembers,
         GatewayIntentBits.GuildMessages,
         GatewayIntentBits.MessageContent
     ]
@@ -21,7 +22,7 @@ const miyuki = new Client({
 miyuki.commands = new Collection();
 miyuki.events = new Collection();
 
-//Define paths to commands folders
+// Define paths to commands folders
 const commandsFolderPath = path.join(__dirname, 'commands');
 const commandFolders = fs.readdirSync(commandsFolderPath);
 
