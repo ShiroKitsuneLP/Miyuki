@@ -16,6 +16,7 @@ module.exports = {
         ),
     usage: '/8ball <question>',
     async execute(interaction, miyuki) {
+        
         // Get the question from the options
         const question = interaction.options.getString('question');
 
@@ -58,7 +59,7 @@ module.exports = {
                 { name: 'Your Question', value: question },
                 { name: '8ball\'s Answer', value: randomResponse }
             );
-            
+
         await interaction.reply({ embeds: [eightBallEmbed] });
         
     }
