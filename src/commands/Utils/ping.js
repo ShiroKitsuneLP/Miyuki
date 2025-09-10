@@ -23,7 +23,8 @@ module.exports = {
                 { name: 'Ping', value: 'Pinging...', inline: true },
                 { name: 'API Latency', value: 'Pinging...', inline: true }
             );
-        const sent = await interaction.reply({ embeds: [pingEmbed] });
+
+        const sent = await interaction.reply({ embeds: [pingEmbed], fetchReply: true });
 
         // Calculate ping and latency
         const ping = sent.createdTimestamp - interaction.createdTimestamp;
@@ -34,6 +35,7 @@ module.exports = {
             { name: 'Ping', value: `${ping}ms`, inline: true },
             { name: 'API Latency', value: `${latency}ms`, inline: true }
         );
+
         await interaction.editReply({ embeds: [pingEmbed] });
     }
 }

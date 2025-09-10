@@ -56,6 +56,7 @@ module.exports = {
                 .setDescription('Here\'s an overview of all command categories. To see the commands within a specific category, use `/help [Category]`')
                 .setThumbnail(miyuki.user.displayAvatarURL({ dynamic: true, size: 2048 }))
                 .addFields(fields);
+
             return await interaction.reply({ embeds: [helpEmbed] });
         }
 
@@ -91,6 +92,7 @@ module.exports = {
                 .setDescription(`Here are all commands in the **${matchedCategory}** category:`)
                 .setThumbnail(miyuki.user.displayAvatarURL({ dynamic: true, size: 2048 }))
                 .addFields(fields);
+
             return await interaction.reply({ embeds: [helpCategoryEmbed] });
         }
 
@@ -115,8 +117,8 @@ module.exports = {
             if (foundCommand) break;
         }
 
+        // If a command is matched, show detailed info about the command
         if (foundCommand) {
-            // If a command is matched, show detailed info about the command
             const helpCommandEmbed = new EmbedBuilder()
                 .setColor(color.default)
                 .setTitle(`Command: ${foundCommand.data.name}`)
@@ -130,6 +132,7 @@ module.exports = {
                     { name: 'Category', value: commandCategory || 'Unknown', inline: true },
                     { name: 'Usage', value: foundCommand.usage || 'No usage information provided.', inline: true }
                 );
+
             return await interaction.reply({ embeds: [helpCommandEmbed] });
         } else {
             // If no match is found, inform the user
