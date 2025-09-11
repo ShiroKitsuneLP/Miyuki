@@ -55,12 +55,13 @@ module.exports = {
                 { name: 'Users', value: `${totalUsers}`, inline: true },
                 { name: 'Commands', value: `${totalCommands}`, inline: true },
 
+                // Spacer
                 { name: '', value: '', inline: false },
 
                 // Links
                 { name: 'Invite Me', value: `[Click Here](${discordLinks.invite})`, inline: true },
-                { name: 'Support Server', value: `[Click Here](${discordLinks.supportServer})`, inline: true },
-                { name: 'Website', value: `[Comming Soon]`, inline: true },
+                { name: 'Miyuki\'s Hideout', value: `[Click Here](${discordLinks.supportServer})`, inline: true },
+                { name: 'Website', value: `[Click Here](${discordLinks.website})`, inline: true },
 
                 // Fun Info
                 { name: 'Personality', value: 'Cute, helpful & always online~', inline: false },
