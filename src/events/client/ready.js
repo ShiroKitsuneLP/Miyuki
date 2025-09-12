@@ -1,6 +1,9 @@
 // Import necessary classes from discord.js
 const { Events, ActivityType } = require('discord.js');
 
+// Import the database to check if it exists on startup
+const db = require('../../db/database');
+
 module.exports = {
     name: Events.ClientReady,
     once: true,

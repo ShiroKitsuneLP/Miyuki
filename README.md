@@ -36,6 +36,7 @@ Want a fox companion for your Discord server without hosting it yourself?
 
 - Required npm packages:
     - `discord.js`
+    - `better-sqlite3`
 
 ---
 
