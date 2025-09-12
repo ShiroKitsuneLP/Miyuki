@@ -5,6 +5,9 @@ const { Client, Collection, GatewayIntentBits } = require('discord.js');
 const fs = require('fs');
 const path = require('path');
 
+// Import the schema setup function
+const { setupSchema } = require('./db/schema');
+
 // Import Discord token from config.json
 const { discord } = require('./config/config.json');
 
@@ -17,6 +20,12 @@ const miyuki = new Client({
         GatewayIntentBits.MessageContent
     ]
 });
+
+// Import the database to check if it exists on startup
+require('./db/database');
+
+// Ensure all database schemas are set up
+setupSchema();
 
 // Initialize collections for events
 miyuki.commands = new Collection();
