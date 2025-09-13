@@ -63,12 +63,17 @@ Want a fox companion for your Discord server without hosting it yourself?
     - Create a `config.json` file in the `config` folder:
      ```json
     {
-       "discord": {
+         "discord": {
             "token": "YOUR_DISCORD_BOT_TOKEN",
             "clientId": "YOUR_BOT_CLIENT_ID",
             "guildId": "YOUR_GUILD_ID"
-        },
-        "discordLinks": {
+         },
+         "discordAdmin": {
+            "token": "YOUR_DISCORD_BOT_TOKEN",
+            "clientId": "YOUR_BOT_CLIENT_ID",
+            "guildId": "YOUR_GUILD_ID"
+         },
+         "discordLinks": {
             "invite": "BOT_INVITE_LINK",
             "supportServer": "YOUR_GUILD_LINK",
             "website": "YOUR_WEBSITE_LINK"

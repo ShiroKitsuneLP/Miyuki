@@ -9,10 +9,51 @@ const path = require('path');
 const { setupSchema } = require('./db/schema');
 
 // Import Discord token from config.json
-const { discord } = require('./config/config.json');
+const { discord, discordAdmin } = require('./config/config.json');
+
+function loadFiles(client, type, folderPath, botName) {
+    client[type] = new Collection();
+
+    const folders = fs.readdirSync(folderPath);
+
+    for (const folder of folders) {
+        const filesPath = path.join(folderPath, folder);
+        const files = fs.readdirSync(filesPath).filter(file => file.endsWith('.js'));
+
+        for (const file of files) {
+            const filePath = path.join(filesPath, file);
+            const item = require(filePath);
+
+            // Loads the commands
+            if (type === 'commands' && 'data' in item && 'execute' in item) {
+                client.commands.set(item.data.name, item);
+                console.log(`[BOT] Command "${item.data.name}" loaded for ${botName}.`);
+            } else if (type === 'events' && 'name' in item) {
+                if (item.once) {
+                    client.once(item.name, (...args) => item.execute(...args, client));
+                } else {
+                    client.on(item.name, (...args) => item.execute(...args, client));
+                }
+                console.log(`[BOT] Event "${item.name}" loaded for ${botName}.`);
+            } else {
+                console.log(`[WARNING] File "${filePath}" is missing a required 'data'/'execute' or 'name' property.`);
+            }
+        }
+    }
+}
 
 // Create a new Discord client with the necessary intents
 const miyuki = new Client({
+    intents: [
+        GatewayIntentBits.Guilds,
+        GatewayIntentBits.GuildMembers,
+        GatewayIntentBits.GuildMessages,
+        GatewayIntentBits.MessageContent
+    ]
+});
+
+// Create a new Admin Discord client with the necessary intents
+const miyukiAdmin = new Client({
     intents: [
         GatewayIntentBits.Guilds,
         GatewayIntentBits.GuildMembers,
@@ -27,52 +68,13 @@ require('./db/database');
 // Ensure all database schemas are set up
 setupSchema();
 
-// Initialize collections for events
-miyuki.commands = new Collection();
-miyuki.events = new Collection();
+// Load commands and events for main client
+loadFiles(miyuki, 'commands', path.join(__dirname, 'commands'), 'Miyuki');
+loadFiles(miyuki, 'events', path.join(__dirname, 'events'), 'Miyuki');
 
-// Define paths to commands folders
-const commandsFolderPath = path.join(__dirname, 'commands');
-const commandFolders = fs.readdirSync(commandsFolderPath);
-
-// Load command files
-for (const folder of commandFolders) {
-    const commandsPath = path.join(commandsFolderPath, folder);
-    const commandFiles = fs.readdirSync(commandsPath).filter(file => file.endsWith('.js'));
-    for (const file of commandFiles) {
-        const filePath = path.join(commandsPath, file);
-        const command = require(filePath);
-        if ('data' in command && 'execute' in command) {
-            miyuki.commands.set(command.data.name, command);
-        } else {
-            console.log(`[WARNING] The command at ${filePath} is missing a required "data" or "execute" property.`);
-        }
-    }
-}
-
-// Define paths to events folders
-const eventsFolderPath = path.join(__dirname, 'events');
-const eventFolders = fs.readdirSync(eventsFolderPath);
-
-// Load event files
-for (const folder of eventFolders) {
-    const eventsPath = path.join(eventsFolderPath, folder);
-    const eventFiles = fs.readdirSync(eventsPath).filter(file => file.endsWith('.js'));
-    for (const file of eventFiles) {
-        const filePath = path.join(eventsPath, file);
-        const event = require(filePath);
-        if (!event.name) {
-            console.log(`[WARNING] The event at ${filePath} is missing a "name" property.`);
-            continue;
-        }
-        if (event.once) {
-            miyuki.once(event.name, (...args) => event.execute(...args, miyuki));
-        } else {
-            miyuki.on(event.name, (...args) => event.execute(...args, miyuki));
-        }
-        miyuki.events.set(event.name, event);
-    }
-}
+// Load commands and events for admin client
+loadFiles(miyukiAdmin, 'commands', path.join(__dirname, 'adminCommands'), 'Miyuki Admin');
+loadFiles(miyukiAdmin, 'events', path.join(__dirname, 'adminEvents'), 'Miyuki Admin');
 
 // Check if a token is provided
 if (!discord.token) {
@@ -80,5 +82,11 @@ if (!discord.token) {
     process.exit(1);
 }
 
+if (!discordAdmin.token) {
+    console.error('Discord Admin token is not provided in config.json');
+    process.exit(1);
+}
+
 // Start the bot with the provided token
 miyuki.login(discord.token);
+miyukiAdmin.login(discordAdmin.token);
