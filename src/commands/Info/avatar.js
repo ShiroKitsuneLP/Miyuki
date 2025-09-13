@@ -28,7 +28,7 @@ module.exports = {
             .setAuthor({
                 name: miyuki.user.username,
                 iconURL: miyuki.user.displayAvatarURL({ dynamic: true, size: 2048 })
-            })
+            });
 
         await interaction.reply({ embeds: [avatarEmbed] });
     }
