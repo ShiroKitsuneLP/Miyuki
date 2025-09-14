@@ -9,21 +9,21 @@ const { actiongif } = require('../../db/repo');
 
 module.exports = {
     data: new SlashCommandBuilder()
-        .setName('pat')
-        .setDescription('Pat someone!')
+        .setName('hug')
+        .setDescription('Hug someone!')
         .addUserOption(option => 
             option.setName('target')
-                .setDescription('The user to pat')
+                .setDescription('The user to hug')
                 .setRequired(true)
         ),
-    usage: '/pat <User>',
+    usage: '/hug <User>',
     async execute(interaction, miyuki) {
 
         // Get the target user and sender
         const target = interaction.options.getUser('target');
         const sender = interaction.user;
 
-        // Prevent users from patting themselves
+        // Prevent users from hugging themselves
         if (target.id === interaction.user.id) {
             const errorEmbed = new EmbedBuilder()
                 .setColor(color.error)
@@ -31,38 +31,38 @@ module.exports = {
                     name: miyuki.user.username,
                     iconURL: miyuki.user.displayAvatarURL({ dynamic: true, size: 2048 })
                 })
-                .setDescription('Oops! You can\'t pat yourself, silly! \n Try patting someone else~');
+                .setDescription('Aww, you can\'t hug yourself! But here\'s a big virtual hug from me to you! 🤗');
 
             return interaction.reply({ embeds: [errorEmbed], flags: MessageFlags.Ephemeral });
         }
 
-        // Array of pat messages
-        const patMsg = [
-            `${sender} gently pats ${target}. There, there!`,
-            `${sender} gives ${target} a warm pat on the head!`,
-            `${sender} softly pats ${target}. Feeling better now?`,
-            `${sender} gives ${target} a comforting pat. You're not alone!`,
-            `${sender} pats ${target}. There, there, everything will be okay!`
+        // Array of hug messages
+        const hugMsg = [
+            `${sender} gives ${target} a warm hug!`,
+            `${sender} wraps their arms around ${target} for a big hug!`,
+            `${sender} hugs ${target} tightly. You're safe now!`,
+            `${sender} shares a comforting hug with ${target}. You're not alone!`,
+            `${sender} gives ${target} a gentle hug. Everything will be okay!`
         ];
 
-        // Select a random pat message
-        const randomPatMsg = patMsg[Math.floor(Math.random() * patMsg.length)];
+        // Select a random hug message
+        const randomHugMsg = hugMsg[Math.floor(Math.random() * hugMsg.length)];
 
-        // Get a random pat GIF from the database
-        const gifObj = actiongif.getRandom('pat');
+        // Get a random hug GIF from the database
+        const gifObj = actiongif.getRandom('hug');
         const gifUrl = typeof gifObj === 'string' ? gifObj : gifObj?.url;
 
-        const patEmbed = new EmbedBuilder()
+        const hugEmbed = new EmbedBuilder()
             .setColor(color.default)
-            .setTitle('A Sweet Pat!')
+            .setTitle('A Warm Hug!')
             .setAuthor({
                 name: miyuki.user.username,
                 iconURL: miyuki.user.displayAvatarURL({ dynamic: true, size: 2048 })
             })
-            .setDescription(randomPatMsg)
+            .setDescription(randomHugMsg)
             .setImage(gifUrl)
             .setFooter({ text: `Requested by ${interaction.user.tag}`, iconURL: interaction.user.displayAvatarURL({ dynamic: true }) });
 
-        await interaction.reply({ embeds: [patEmbed] });
+        await interaction.reply({ embeds: [hugEmbed] });
     }
 }

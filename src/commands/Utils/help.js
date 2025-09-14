@@ -13,8 +13,7 @@ module.exports = {
         .setName('help')
         .setDescription('Shows all commands or info about a category or command.')
         .addStringOption(option =>
-            option
-                .setName('query')
+            option.setName('query')
                 .setDescription('Category or command name')
                 .setRequired(false)
         ),

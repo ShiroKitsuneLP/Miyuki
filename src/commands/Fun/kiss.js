@@ -1,7 +1,7 @@
 // Import necessary classes from discord.js
 const { SlashCommandBuilder, MessageFlags, EmbedBuilder } = require('discord.js');
 
-// Import color configuration
+// Import Color configuration
 const { color } = require('./../../config/color.json');
 
 // Import actiongif repository
@@ -9,21 +9,21 @@ const { actiongif } = require('../../db/repo');
 
 module.exports = {
     data: new SlashCommandBuilder()
-        .setName('pat')
-        .setDescription('Pat someone!')
+        .setName('kiss')
+        .setDescription('Kiss someone!')
         .addUserOption(option => 
             option.setName('target')
-                .setDescription('The user to pat')
+                .setDescription('The user to kiss')
                 .setRequired(true)
         ),
-    usage: '/pat <User>',
+    usage: '/kiss <User>',
     async execute(interaction, miyuki) {
 
         // Get the target user and sender
         const target = interaction.options.getUser('target');
         const sender = interaction.user;
 
-        // Prevent users from patting themselves
+        // Prevent users from kissing themselves
         if (target.id === interaction.user.id) {
             const errorEmbed = new EmbedBuilder()
                 .setColor(color.error)
@@ -31,38 +31,38 @@ module.exports = {
                     name: miyuki.user.username,
                     iconURL: miyuki.user.displayAvatarURL({ dynamic: true, size: 2048 })
                 })
-                .setDescription('Oops! You can\'t pat yourself, silly! \n Try patting someone else~');
+                .setDescription('Aww, you can\'t kiss yourself! But here\'s a big virtual kiss from me to you!');
 
             return interaction.reply({ embeds: [errorEmbed], flags: MessageFlags.Ephemeral });
         }
 
-        // Array of pat messages
-        const patMsg = [
-            `${sender} gently pats ${target}. There, there!`,
-            `${sender} gives ${target} a warm pat on the head!`,
-            `${sender} softly pats ${target}. Feeling better now?`,
-            `${sender} gives ${target} a comforting pat. You're not alone!`,
-            `${sender} pats ${target}. There, there, everything will be okay!`
+        // Array of kiss messages
+        const kissMsg = [
+            `${sender} gives ${target} a sweet kiss!`,
+            `${sender} plants a gentle kiss on ${target}'s cheek!`,
+            `${sender} kisses ${target} softly. Mwah!`,
+            `${sender} shares a loving kiss with ${target}. You're special!`,
+            `${sender} gives ${target} a tender kiss. Feel the love!`
         ];
 
-        // Select a random pat message
-        const randomPatMsg = patMsg[Math.floor(Math.random() * patMsg.length)];
+        // Select a random kiss message
+        const randomKissMsg = kissMsg[Math.floor(Math.random() * kissMsg.length)];
 
-        // Get a random pat GIF from the database
-        const gifObj = actiongif.getRandom('pat');
+        // Get a random kiss GIF from the database
+        const gifObj = actiongif.getRandom('kiss');
         const gifUrl = typeof gifObj === 'string' ? gifObj : gifObj?.url;
 
-        const patEmbed = new EmbedBuilder()
+        const kissEmbed = new EmbedBuilder()
             .setColor(color.default)
-            .setTitle('A Sweet Pat!')
+            .setTitle('A Sweet Kiss!')
             .setAuthor({
                 name: miyuki.user.username,
                 iconURL: miyuki.user.displayAvatarURL({ dynamic: true, size: 2048 })
             })
-            .setDescription(randomPatMsg)
+            .setDescription(randomKissMsg)
             .setImage(gifUrl)
             .setFooter({ text: `Requested by ${interaction.user.tag}`, iconURL: interaction.user.displayAvatarURL({ dynamic: true }) });
 
-        await interaction.reply({ embeds: [patEmbed] });
+        return interaction.reply({ embeds: [kissEmbed] });
     }
 }
