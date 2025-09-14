@@ -17,6 +17,14 @@ const listGIFs = db.prepare(`
     LIMIT ? OFFSET ?
 `);
 
+// Preared statemant to get all GIF's
+const listAllGIFs = db.prepare(`
+    SELECT id, action, url
+    FROM action_gifs
+    ORDER BY id
+    LIMIT ? OFFSET ?
+`);
+
 // Prepared statement to delete GIF with id
 const deleteById = db.prepare(`
     DELETE FROM action_gifs
@@ -43,6 +51,12 @@ module.exports = {
     list(action, limit = 10, page = 1) {
         const offset = Math.max(0, (page - 1) * limit);
         return listGIFs.all(action, limit, offset);
+    },
+
+    // Shows all GIFs
+    listAll(limit = 10, page = 1) {
+        const offset = Math.max(0, (page - 1) * limit);
+        return listAllGIFs.all(limit, offset);
     },
 
     // Removed GIF url by ID

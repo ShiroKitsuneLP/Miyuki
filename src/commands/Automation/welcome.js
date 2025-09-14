@@ -8,24 +8,39 @@ const { welcome } = require('../../db/repo');
 const { color } = require('./../../config/color.json');
 
 // Embed builders
-function successEmbed(desc) {
+function successEmbed(desc, client) {
     return new EmbedBuilder()
         .setColor(color.success)
         .setTitle('Success')
+        .setAuthor({ 
+            name: client.user.username, 
+            iconURL: client.user.displayAvatarURL({ dynamic: true, size: 2048 })
+        })
+        .setThumbnail(client.user.displayAvatarURL({ dynamic: true, size: 2048 }))
         .setDescription(desc);
 }
 
-function errorEmbed(desc) {
+function errorEmbed(desc, client) {
     return new EmbedBuilder()
         .setColor(color.error)
         .setTitle('Error')
+        .setAuthor({ 
+            name: client.user.username, 
+            iconURL: client.user.displayAvatarURL({ dynamic: true, size: 2048 })
+        })
+        .setThumbnail(client.user.displayAvatarURL({ dynamic: true, size: 2048 }))
         .setDescription(desc);
 }
 
-function infoEmbed(desc) {
+function infoEmbed(desc, client) {
     return new EmbedBuilder()
         .setColor(color.default)
         .setTitle('Info')
+        .setAuthor({ 
+            name: client.user.username, 
+            iconURL: client.user.displayAvatarURL({ dynamic: true, size: 2048 })
+        })
+        .setThumbnail(client.user.displayAvatarURL({ dynamic: true, size: 2048 }))
         .setDescription(desc);
 }
 
