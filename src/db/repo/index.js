@@ -1,4 +1,5 @@
 // Export all database repositories
 module.exports = {
-    welcome: require('./welcome')
+    welcome: require('./welcome'),
+    actiongif: require('./actiongif')
 };

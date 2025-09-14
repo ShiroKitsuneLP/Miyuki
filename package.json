@@ -7,6 +7,7 @@
     "start": "node src/miyuki.js",
     "deploy:global": "node src/deploy-commands.js --global",
     "deploy:guild": "node src/deploy-commands.js --guild",
+    "deploy:admin": "node src/deploy-commands.js --admin",
     "dev": "nodemon --trace-warnings src/miyuki.js"
   },
   "repository": {

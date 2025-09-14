@@ -42,6 +42,7 @@ Want a fox companion for your Discord server without hosting it yourself?
 
 ## Foxy Features
 
+- Custom welcome messages for new members
 - More cute and clever features coming soon!
 
 ---
@@ -63,6 +64,7 @@ Want a fox companion for your Discord server without hosting it yourself?
     - Create a `config.json` file in the `config` folder:
      ```json
     {
+         "ownerId": "YOUR_ID",
          "discord": {
             "token": "YOUR_DISCORD_BOT_TOKEN",
             "clientId": "YOUR_BOT_CLIENT_ID",
@@ -81,7 +83,12 @@ Want a fox companion for your Discord server without hosting it yourself?
     }
      ```
 
-4. **Start the bot**
+4. **Deploy the Commands**
+   ```sh
+   npm run deploy:guild
+   ```
+
+5. **Start the bot**
    ```sh
    npm run start
    ```

@@ -1,0 +1,57 @@
+// Import the database connection
+const db = require('./../database.js');
+
+// Prepared statement to insert a new GIF
+const addGIF = db.prepare(`
+    INSERT INTO action_gifs (action, url)
+    VALUES (@action, @url)
+    ON CONFLICT(action, url) DO NOTHING
+`);
+
+// Prepared statement to get a List of GIF URLs
+const listGIFs = db.prepare(`
+    SELECT id, url
+    FROM action_gifs
+    WHERE action = ?
+    ORDER BY id DESC
+    LIMIT ? OFFSET ?
+`);
+
+// Prepared statement to delete GIF with id
+const deleteById = db.prepare(`
+    DELETE FROM action_gifs
+    WHERE id = ?
+`);
+
+// Prepared statement to get one random GIF url
+const randomGIF = db.prepare(`
+    SELECT id, url
+    FROM action_gifs
+    WHERE action = ?
+    ORDER BY RANDOM()
+    LIMIT 1
+`);
+
+module.exports = {
+
+    // Add a GIF
+    add(action, url) {
+        addGIF.run({ action, url });
+    },
+    
+    // Shows all GIFs
+    list(action, limit = 10, page = 1) {
+        const offset = Math.max(0, (page - 1) * limit);
+        return listGIFs.all(action, limit, offset);
+    },
+
+    // Removed GIF url by ID
+    removeById(id) {
+        return deleteById.run(id).changes;
+    },
+
+    // Get Random GIF
+    getRandom(action) {
+        return randomGIF.get(action) ?? null;
+    }
+}

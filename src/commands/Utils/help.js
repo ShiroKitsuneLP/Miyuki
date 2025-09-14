@@ -136,7 +136,7 @@ module.exports = {
             return await interaction.reply({ embeds: [helpCommandEmbed] });
         } else {
             // If no match is found, inform the user
-            return await interaction.reply({ content: `No category or command found matching "${query}". Please check your input and try again.`, ephemeral: true });
+            return await interaction.reply({ content: `No category or command found matching "${query}". Please check your input and try again.`, flags: MessageFlags.Ephemeral });
         }
 
     }

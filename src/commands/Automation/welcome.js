@@ -12,21 +12,21 @@ function successEmbed(desc) {
     return new EmbedBuilder()
         .setColor(color.success)
         .setTitle('Success')
-        .setDescription(desc)
+        .setDescription(desc);
 }
 
 function errorEmbed(desc) {
     return new EmbedBuilder()
         .setColor(color.error)
         .setTitle('Error')
-        .setDescription(desc)
+        .setDescription(desc);
 }
 
 function infoEmbed(desc) {
     return new EmbedBuilder()
         .setColor(color.default)
         .setTitle('Info')
-        .setDescription(desc)
+        .setDescription(desc);
 }
 
 // Embed Color Validator
