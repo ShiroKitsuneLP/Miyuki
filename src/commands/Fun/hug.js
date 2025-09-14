@@ -31,7 +31,7 @@ module.exports = {
                     name: miyuki.user.username,
                     iconURL: miyuki.user.displayAvatarURL({ dynamic: true, size: 2048 })
                 })
-                .setDescription('Aww, you can\'t hug yourself! But here\'s a big virtual hug from me to you! 🤗');
+                .setDescription('Aww, you can\'t hug yourself! But here\'s a big virtual hug from me to you!');
 
             return interaction.reply({ embeds: [errorEmbed], flags: MessageFlags.Ephemeral });
         }

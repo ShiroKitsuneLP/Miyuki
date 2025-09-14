@@ -31,7 +31,7 @@ module.exports = {
                     name: miyuki.user.username,
                     iconURL: miyuki.user.displayAvatarURL({ dynamic: true, size: 2048 })
                 })
-                .setDescription('Hey! You can\'t slap yourself! But here\'s a gentle slap from me to you! 👋');
+                .setDescription('Hey! You can\'t slap yourself! But here\'s a gentle slap from me to you!');
 
             return await interaction.reply({ embeds: [errorEmbed] });
         }
