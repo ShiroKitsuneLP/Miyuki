@@ -4,10 +4,10 @@ const { Events, ActivityType } = require('discord.js');
 module.exports = {
     name: Events.ClientReady,
     once: true,
-    execute(client) {
+    execute(miyuki) {
 
         // Log when the bot is ready and set its activity
-        console.log(`${client.user.username} is now Online.`);
-        client.user.setActivity('with Snow Foxes', { type: ActivityType.Playing });
+        console.log(`${miyuki.user.username} is now Online.`);
+        miyuki.user.setActivity('with Snow Foxes', { type: ActivityType.Playing });
     }
 }

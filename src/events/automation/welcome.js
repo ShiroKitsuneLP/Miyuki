@@ -91,7 +91,7 @@ function buildEmbedFromConfig(cfg, member) {
 module.exports = {
     name: Events.GuildMemberAdd,
     once: false,
-    async execute(member, miyuki) {
+    async execute(member) {
         try {
             const cfg = welcome.getConfig(member.guild.id);
             if (!cfg) return;

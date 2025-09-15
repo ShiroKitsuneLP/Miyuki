@@ -2,6 +2,7 @@
     "color": {
         "default": "#CCE0E9",
         "error": "#D15252",
-        "success": "#2ECC71"
+        "success": "#2ECC71",
+        "warn": "#fE903E"
     }
 }

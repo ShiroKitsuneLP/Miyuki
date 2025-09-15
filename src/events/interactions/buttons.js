@@ -6,14 +6,14 @@ const { color } = require('./../../config/color.json');
 
 module.exports = {
     name: Events.InteractionCreate,
-    async execute(interaction, client) {
+    async execute(interaction, miyuki) {
         if (!interaction.isButton()) return;
 
         if (interaction.customId.startsWith('trivia_')) {
             await interaction.deferUpdate();
 
             // Trivia session per user
-            const triviaSession = client.trivia?.[interaction.user.id];
+            const triviaSession = miyuki.trivia?.[interaction.user.id];
             if (!triviaSession) {
                 return await interaction.followUp({
                     content: 'This trivia is not for you, or the quiz has already finished/expired!',
@@ -27,7 +27,7 @@ module.exports = {
                     content: 'This trivia question has expired!',
                     flags: MessageFlags.Ephemeral
                 });
-                delete client.trivia[interaction.user.id];
+                delete miyuki.trivia[interaction.user.id];
                 return;
             }
 
@@ -66,7 +66,7 @@ module.exports = {
             await interaction.followUp({ embeds: [embed], flags: MessageFlags.Ephemeral });
 
             // Remove session
-            delete client.trivia[interaction.user.id];
+            delete miyuki.trivia[interaction.user.id];
         }
     }
 };

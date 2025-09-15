@@ -8,6 +8,9 @@ const path = require('path');
 // Import the schema setup function
 const { setupSchema } = require('./db/schema');
 
+// Import the utility starter
+const { startUtils } = require('./utils');
+
 // Import Discord token from config.json
 const { discord, discordAdmin } = require('./config/config.json');
 
@@ -48,6 +51,7 @@ const miyuki = new Client({
         GatewayIntentBits.Guilds,
         GatewayIntentBits.GuildMembers,
         GatewayIntentBits.GuildMessages,
+        GatewayIntentBits.GuildModeration,
         GatewayIntentBits.MessageContent
     ]
 });
@@ -67,6 +71,9 @@ require('./db/database');
 
 // Ensure all database schemas are set up
 setupSchema();
+
+// Start utilities
+startUtils();
 
 // Load commands and events for main client
 loadFiles(miyuki, 'commands', path.join(__dirname, 'commands'), 'Miyuki');

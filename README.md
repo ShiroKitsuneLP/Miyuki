@@ -43,6 +43,7 @@ Want a fox companion for your Discord server without hosting it yourself?
 ## Foxy Features
 
 - Custom welcome messages for new members
+- Warn system with automatic warn cleanup on ban
 - More cute and clever features coming soon!
 
 ---

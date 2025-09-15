@@ -79,4 +79,4 @@ let gifCache = null;
 // Function to reload the GIF cache
 function reloadCache() {
     gifCache = module.exports.listAll(1000, 1);
-}
+};
