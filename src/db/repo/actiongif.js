@@ -45,6 +45,7 @@ module.exports = {
     // Add a GIF
     add(action, url) {
         addGIF.run({ action, url });
+        reloadCache();
     },
     
     // Shows all GIFs
@@ -61,11 +62,21 @@ module.exports = {
 
     // Removed GIF url by ID
     removeById(id) {
-        return deleteById.run(id).changes;
+        const changes = deleteById.run(id).changes;
+        reloadCache();
+        return changes;
     },
 
     // Get Random GIF
     getRandom(action) {
         return randomGIF.get(action) ?? null;
     }
+}
+
+// GIF Cache
+let gifCache = null;
+
+// Function to reload the GIF cache
+function reloadCache() {
+    gifCache = module.exports.listAll(1000, 1);
 }
