@@ -34,6 +34,16 @@ module.exports = {
         const guildId = interaction.guild.id;
         const moderatorId = interaction.user.id;
 
+        //check if user is miyuki
+        if (user.id === miyuki.user.id) {
+            return interaction.reply({ content: 'You cannot warn Miyuki.', ephemeral: true });
+        }
+
+        // Check if user is a bot
+        if (user.bot) {
+            return interaction.reply({ content: 'You cannot warn a bot.', ephemeral: true });
+        }
+
         // Add warning to database
         warn.add(guildId, user.id, moderatorId, reason);
         const warnCount = warn.getCount(guildId, user.id);
