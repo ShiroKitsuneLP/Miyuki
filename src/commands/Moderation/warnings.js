@@ -1,5 +1,5 @@
 // Import necessary classes from discord.js
-const { SlashCommandBuilder, EmbedBuilder, PermissionFlagsBits } = require('discord.js');
+const { SlashCommandBuilder, EmbedBuilder, PermissionFlagsBits, MessageFlags } = require('discord.js');
 
 // Import the warn repository
 const { warn } = require('../../db/repo');
@@ -23,6 +23,11 @@ module.exports = {
     usage: '/warnings [user] [page]',
     async execute(interaction, miyuki) {
 
+        // Ensure the command is used in a guild
+        if (!interaction.inGuild()) {
+            return interaction.reply({ embeds: [errorEmbed('This command can only be used in a server.')], flags: MessageFlags.Ephemeral });
+        }
+
         // Get command options
         const user = interaction.options.getUser('user');
         const page = interaction.options.getInteger('page') || 1;
@@ -35,10 +40,13 @@ module.exports = {
             const warns = warn.getAll(guildId, user.id);
 
             if (!warns.length) {
-                const { EmbedBuilder } = require('discord.js');
                 const noWarnEmbed = new EmbedBuilder()
                     .setTitle('No Warnings Found')
                     .setColor(color.default)
+                    .setAuthor({
+                        name: miyuki.user.username,
+                        iconURL: miyuki.user.displayAvatarURL({ dynamic: true, size: 2048 })
+                    })
                     .setDescription(`${user} has no warnings.`);
                 return await interaction.reply({ embeds: [noWarnEmbed] });
             }
@@ -60,10 +68,13 @@ module.exports = {
             const allWarns = warn.getWarnCountsForGuild(guildId);
 
             if (!allWarns.length) {
-                const { EmbedBuilder } = require('discord.js');
                 const noWarnedUsersEmbed = new EmbedBuilder()
                     .setTitle('No Warned Users')
                     .setColor(color.default)
+                    .setAuthor({
+                        name: miyuki.user.username,
+                        iconURL: miyuki.user.displayAvatarURL({ dynamic: true, size: 2048 })
+                    })
                     .setDescription('No users with warnings found.');
                 return await interaction.reply({ embeds: [noWarnedUsersEmbed] });
             }

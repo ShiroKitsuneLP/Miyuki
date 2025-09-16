@@ -21,6 +21,11 @@ module.exports = {
     usage: '/setlogchannel <channel>',
     async execute(interaction, miyuki) {
 
+        // Ensure the command is used in a guild
+        if (!interaction.inGuild()) {
+            return interaction.reply({ embeds: [errorEmbed('This command can only be used in a server.')], flags: MessageFlags.Ephemeral });
+        }
+
         // Get command options
         const channel = interaction.options.getChannel('channel');
 

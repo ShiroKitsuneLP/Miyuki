@@ -1,5 +1,5 @@
 // Import necessary classes from discord.js
-const { SlashCommandBuilder, EmbedBuilder, PermissionFlagsBits } = require('discord.js');
+const { SlashCommandBuilder, EmbedBuilder, PermissionFlagsBits, MessageFlags } = require('discord.js');
 
 // Import the warn repository
 const { warn } = require('../../db/repo');
@@ -22,6 +22,11 @@ module.exports = {
         .setDefaultMemberPermissions(PermissionFlagsBits.KickMembers),
     usage: '/warn <user> [reason]',
     async execute(interaction, miyuki) {
+
+        // Ensure the command is used in a guild
+        if (!interaction.inGuild()) {
+            return interaction.reply({ embeds: [errorEmbed('This command can only be used in a server.')], flags: MessageFlags.Ephemeral });
+        }
 
         // Get command options
         const user = interaction.options.getUser('user');
