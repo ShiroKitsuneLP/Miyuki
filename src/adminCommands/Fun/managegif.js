@@ -11,7 +11,7 @@ const { color } = require('./../../config/color.json');
 const { ownerId } = require('./../../config/config.json');
 
 // Available actions
-const actions = ['pat', 'hug', 'kiss', 'slap'];
+const actions = ['pat', 'hug', 'kiss', 'slap', 'boop'];
 
 // Check if its a Valid Link
 function isValidUrl(v) {
