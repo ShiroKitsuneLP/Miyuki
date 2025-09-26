@@ -16,6 +16,8 @@
   "main": "src/miyuki.js",
   "scripts": {
     "dev": "nodemon --trace-warnings src/miyuki.js",
+    "deploy:global": "node src/scripts/deployCommands.js --global",
+    "deploy:guild": "node src/scripts/deployCommands.js --guild",
     "start": "node src/miyuki.js"
   },
   "dependencies": {

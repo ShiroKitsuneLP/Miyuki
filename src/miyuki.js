@@ -5,10 +5,10 @@ const { Client, GatewayIntentBits } = require("discord.js");
 const path = require("path");
 
 // Import Config
-const { mainBot } = require("./config/config.json");
+const { mainBot } = require(path.join(__dirname, "./config/config.json"));
 
 // Import loader
-const { eventLoader } = require("./utils/loader");
+const { commandLoader, eventLoader } = require(path.join(__dirname, "./utils/loader"));
 
 // Create a new main client instance with necessary intents
 const miyuki = new Client({
@@ -18,6 +18,9 @@ const miyuki = new Client({
         GatewayIntentBits.MessageContent
     ]
 });
+
+// Load Commands
+commandLoader(miyuki, path.join(__dirname, 'commands'), 'Miyuki');
 
 // Load Events
 eventLoader(miyuki, path.join(__dirname, 'events'), 'Miyuki');
