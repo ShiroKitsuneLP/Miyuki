@@ -1,8 +1,14 @@
 // Import nessesary discord.js modules
 const { Client, GatewayIntentBits } = require("discord.js");
 
+// Import necessary modules
+const path = require("path");
+
 // Import Config
 const { mainBot } = require("./config/config.json");
+
+// Import loader
+const { eventLoader } = require("./utils/loader");
 
 // Create a new main client instance with necessary intents
 const miyuki = new Client({
@@ -12,6 +18,9 @@ const miyuki = new Client({
         GatewayIntentBits.MessageContent
     ]
 });
+
+// Load Events
+eventLoader(miyuki, path.join(__dirname, 'events'), 'Miyuki');
 
 // Check if token is provided
 if (!mainBot.token) {
