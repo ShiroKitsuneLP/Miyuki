@@ -15,6 +15,7 @@ const { ownerIds } = require(path.join(__dirname, './../../config/config.json'))
 
 // Available actions
 const actions = [
+    'hug',
     'pat'
 ];
 
@@ -114,7 +115,7 @@ module.exports = {
 
         try {
             if(!subcommand) {
-                return interaction.reply({ embeds: [createMiyukiEmbed(miyuki, {
+                return interaction.editReply({ embeds: [createMiyukiEmbed(miyuki, {
                     title: 'Manage GIFs Help',
                     description: 'Here are the available subcommands for managing action gifs:',
                     fields: [
@@ -177,22 +178,26 @@ module.exports = {
             if(subcommand === 'showid') {
                 const id = interaction.options.getString('id', true).trim();
 
-                const gif = actiongif.getGifById(id);
+                const gifObj = actiongif.getGifById(id);
 
-                if(!gif) {
-                    return interaction.editReply({ embeds: [createMiyukiEmbed(miyuki, {
-                        title: 'GIF Not Found',
-                        description: `No GIF found with the ID **${id}**.`
+                if (!gifObj) {
+                    return interaction.editReply({ embeds: [createErrorEmbed(miyuki, {
+                        title: 'No GIF Found',
+                        description: 'No GIF found with the specified ID.'
                     })] });
                 }
 
+                const gifId = gifObj?.id;
+                const gifAction = gifObj?.action;
+                const gifUrl = gifObj?.url;
+
                 return interaction.editReply({ embeds: [createMiyukiEmbed(miyuki, {
-                    title: `GIF Details for ID: ${id}`,
+                    title: `GIF Details for ID: ${gifId}`,
                     fields: [
-                        { name: 'Action', value: gif.action, inline: true },
-                        { name: 'URL', value: gif.url, inline: true }
+                        { name: 'Action', value: gifAction, inline: true },
+                        { name: 'URL', value: gifUrl, inline: true }
                     ],
-                    image: { url: gif.url }
+                    image: gifUrl,
                 })] });
             }
 
@@ -209,7 +214,7 @@ module.exports = {
                     })] });
                 }
 
-                const lines = gifs.map(gif => `**ID:** ${gif.id} | [Link](${gif.url})`).join('\n');
+                const lines = gifs.map(gif => `**ID:** ${gif.id} | **Action:** ${gif.action} | [Link](${gif.url})`).join('\n');
                 return interaction.editReply({ embeds: [createMiyukiEmbed(miyuki, {
                     title: `All Action GIFs (Page ${page})`,
                     description: lines,
@@ -236,6 +241,10 @@ module.exports = {
         } catch (error) {
             console.error(`[ERROR] Error executing managegif command`);
             console.error(error);
+
+            return interaction.editReply({ embeds: [createErrorEmbed(miyuki, {
+                description: 'An error occurred while executing the command. Please try again later.'
+            })] });
         }
     }
 }

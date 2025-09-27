@@ -32,6 +32,12 @@ const listAllActionGifsNoLimitStmt = db.prepare(`
     ORDER BY id DESC;
 `);
 
+const getGifByIdStmt = db.prepare(`
+    SELECT id, action, url 
+    FROM action_gifs 
+    WHERE id = @id;
+`);
+
 const getRandomGifByActionStmt = db.prepare(`
     SELECT id, url 
     FROM action_gifs
@@ -80,6 +86,11 @@ function listAllGifsNoLimit() {
     return listAllActionGifsNoLimitStmt.all();
 }
 
+// Function to get a GIF by ID
+function getGifById(id) {
+    return getGifByIdStmt.get({ id });
+}
+
 // Function to get a random GIF by action
 function getRandomGif(action) {
     return getRandomGifByActionStmt.get({ action });
@@ -98,6 +109,7 @@ module.exports = {
     addGif,
     listActionGifs,
     listAllGifs,
+    getGifById,
     getRandomGif,
     removeById
 }

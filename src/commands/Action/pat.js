@@ -4,7 +4,7 @@ const { SlashCommandBuilder } = require('discord.js');
 // Import necessary modules
 const path = require('path');
 
-// Import embed creation functions
+// Import embedBuilder
 const { createMiyukiEmbed, createErrorEmbed } = require(path.join(__dirname, './../../utils/embedBuilder'));
 
 // Import actiongif database repo
