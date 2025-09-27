@@ -77,4 +77,4 @@ function eventLoader(client, folderPath, botName = 'Bot') {
 module.exports = { 
     commandLoader,
     eventLoader
-};
+}

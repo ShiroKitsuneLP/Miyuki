@@ -6,7 +6,7 @@ const fs = require('fs');
 const path = require('path');
 
 // Import Config
-const { mainBot } = require(path.join(__dirname, './../config/config.json'));
+const { mainBot, adminBot } = require(path.join(__dirname, './../config/config.json'));
 
 // Function to load commands
 function commandLoader(folderPath) {
@@ -38,25 +38,49 @@ if (!mainBot.token) {
     process.exit(1);
 }
 
+if (!adminBot.token) {
+    console.error("[Error] Discord Admin token not found in config.json");
+    process.exit(1);
+}
+
 // Check for command line arguments
+const admin = process.argv.includes('--admin');
 const global = process.argv.includes('--global');
 const guild = process.argv.includes('--guild');
 
 // Check if at least one argument is provided
-if (!global && !guild) {
-    console.error('[Error] Please provide at least one argument: --global or --guild');
+if (!admin && !global && !guild) {
+    console.error('[Error] Please provide at least one argument: --admin, --global or --guild');
     process.exit(1);
 }
 
 // Load commands
 const commands = commandLoader(path.join(__dirname, './../commands'));
+const adminCommands = commandLoader(path.join(__dirname, './../adminCommands'));
 
 // Initialize REST client
 const mainRest = new REST({ version: '10' }).setToken(mainBot.token);
+const adminRest = new REST({ version: '10' }).setToken(adminBot.token);
 
 // Deploy commands
 (async () => {
     try {
+        if (admin) {
+            if (!adminBot.guildId) {
+                console.error('[Error] Admin Guild ID not found in config.json');
+                process.exit(1);
+            }
+
+            console.log(`[Miyuki Admin] Deploying ${adminCommands.length} commands to guild ID ${adminBot.guildId}...`);
+
+            const data = await adminRest.put(
+                Routes.applicationGuildCommands(adminBot.clientId, adminBot.guildId),
+                { body: adminCommands }
+            );
+
+            console.log(`[Miyuki Admin] Successfully deployed ${data.length} commands to guild ID ${adminBot.guildId}.`);
+        }
+
         if (global) {
             console.log(`[Miyuki] Deploying ${commands.length} global commands...`);
             

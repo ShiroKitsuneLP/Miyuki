@@ -15,12 +15,17 @@
   "type": "commonjs",
   "main": "src/miyuki.js",
   "scripts": {
+    "database:drop": "node src/scripts/manageDatabase.js --drop",
+    "database:reset": "node src/scripts/manageDatabase.js --reset",
+    "database:setup": "node src/scripts/manageDatabase.js --setup",
     "dev": "nodemon --trace-warnings src/miyuki.js",
+    "deploy:admin": "node src/scripts/deployCommands.js --admin",
     "deploy:global": "node src/scripts/deployCommands.js --global",
     "deploy:guild": "node src/scripts/deployCommands.js --guild",
     "start": "node src/miyuki.js"
   },
   "dependencies": {
+    "better-sqlite3": "^12.4.1",
     "discord.js": "^14.22.1"
   }
 }

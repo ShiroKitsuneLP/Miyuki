@@ -5,7 +5,7 @@ const { EmbedBuilder } = require('discord.js');
 const path = require('path');
 
 // Import color config
-const { miyukiColors } = require(path.join(__dirname, '../config/color.json'));
+const { miyukiColors } = require(path.join(__dirname, './../config/color.json'));
 
 // Function to create a standardized embed for Miyuki
 function createMiyukiEmbed(client, options = {}) {

@@ -5,7 +5,7 @@ const { SlashCommandBuilder } = require('discord.js');
 const path = require('path');
 
 // Import embedBuilder
-const { createMiyukiEmbed } = require(path.join(__dirname, '../../utils/embedBuilder'));
+const { createMiyukiEmbed } = require(path.join(__dirname, './../../utils/embedBuilder'));
 
 module.exports = {
     data: new SlashCommandBuilder()
