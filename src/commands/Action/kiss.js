@@ -19,6 +19,7 @@ module.exports = {
                .setDescription('The user to kiss')
                 .setRequired(true)
         ),
+    category: 'Action',
     usage: '/kiss <target>',
     async execute(interaction, miyuki) {
 

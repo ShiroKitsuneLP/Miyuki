@@ -103,6 +103,9 @@ module.exports = {
     usage: '/managegif <add|show|showall|remove> [options]',
     async execute(interaction, miyuki) {
 
+        // Defer the reply to allow more time for processing
+        await interaction.deferReply();
+
         // Check if the user is an owner
         if(!ownerIds.includes(interaction.user.id)) {
             return interaction.reply({ embeds: [createErrorEmbed(miyuki, {
@@ -110,8 +113,6 @@ module.exports = {
                 description: 'You do not have permission to use this command.'
             })] });
         }
-
-        await interaction.deferReply();
 
         // Get the subcommand
         const subcommand = interaction.options.getSubcommand(false);

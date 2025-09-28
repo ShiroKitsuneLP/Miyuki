@@ -19,6 +19,7 @@ module.exports = {
                .setDescription('The user to pat')
                .setRequired(true)
         ),
+    category: 'Action',
     usage: '/pat <target>',
     async execute(interaction, miyuki) {
 

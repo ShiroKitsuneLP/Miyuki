@@ -11,6 +11,7 @@ module.exports = {
     data: new SlashCommandBuilder()
         .setName('ping')
         .setDescription('Replies with Pong!'),
+    category: 'Utility',
     usage: '/ping',
     async execute(interaction, miyuki) {
         

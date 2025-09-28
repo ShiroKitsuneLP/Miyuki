@@ -19,6 +19,7 @@ module.exports = {
                 .setDescription('The user to bite')
                 .setRequired(true)
         ),
+    category: 'Action',
     usage: '/bite <target>',
     async execute(interaction, miyuki) {
 

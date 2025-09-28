@@ -19,6 +19,7 @@ module.exports = {
                .setDescription('The user to slap')
                 .setRequired(true)
         ),
+    category: 'Action',
     usage: '/slap <target>',
     async execute(interaction, miyuki) {
 

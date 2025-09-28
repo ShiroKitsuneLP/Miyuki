@@ -19,6 +19,7 @@ module.exports = {
                .setDescription('The user to hug')
                 .setRequired(true)
         ),
+    category: 'Action',
     usage: '/hug <target>',
     async execute(interaction, miyuki) {
 
