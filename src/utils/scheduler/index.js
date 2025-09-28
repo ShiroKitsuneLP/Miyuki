@@ -9,4 +9,4 @@ function startSchedulers() {
     startWarnCleanup();
 }
 
-module.exports = { startSchedulers };
+module.exports = { startSchedulers }

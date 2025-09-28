@@ -77,6 +77,7 @@ module.exports = {
                 title: 'Warning Not Found',
                 description: `No warning found with ID #${warnId}.`
             })], flags: MessageFlags.Ephemeral });
+            
         } catch (error) {
             console.error('[Error] Error executing delwarn command');
             console.error(error);

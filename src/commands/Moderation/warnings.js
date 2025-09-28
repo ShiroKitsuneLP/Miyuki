@@ -100,6 +100,7 @@ module.exports = {
                 description: warnedUsersList,
                 footer: { text: `Page ${page} of ${totalPages}` }
             })] });
+            
         } catch (error) {
             console.error('[Error] Error executing warnings command:');
             console.error(error);
