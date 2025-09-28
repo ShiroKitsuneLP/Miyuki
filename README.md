@@ -92,6 +92,8 @@ npm install
 
 Pull requests and issues are welcome! Let your creativity run wild – foxes love clever ideas.
 
+---
+
 <div align="center">
     Made with ❤️ and fox magic by ShiroKitsune
 </div>
