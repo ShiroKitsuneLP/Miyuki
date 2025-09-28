@@ -10,9 +10,6 @@ const { createErrorEmbed, createWarnEmbed, createDMWarnEmbed } = require(path.jo
 // Import warn database repo
 const { warn } = require(path.join(__dirname, './../../database/repo'));
 
-// Import color config
-const { miyukiColors } = require(path.join(__dirname, './../../config/color.json'));
-
 module.exports = {
     data: new SlashCommandBuilder()
         .setName('warn')
@@ -121,7 +118,6 @@ module.exports = {
             console.error(error);
 
             return interaction.editReply({ embeds: [createErrorEmbed(miyuki, {
-                title: 'Error',
                 description: 'An error occurred while trying to warn the user. Please try again later.'
             })], flags: MessageFlags.Ephemeral });
         }

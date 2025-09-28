@@ -57,4 +57,11 @@ async function startBots() {
     await miyukiAdmin.login(adminBot.token);
 }
 
+// Start both bots
 startBots();
+
+// Import scheduler
+const { startSchedulers } = require(path.join(__dirname, './utils/scheduler'));
+
+// Start Scheduler tasks
+startSchedulers();

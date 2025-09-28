@@ -16,6 +16,18 @@ const getWarnsStmt = db.prepare(`
     ORDER BY timestamp DESC;
 `);
 
+const getWarnByIdStmt = db.prepare(`
+    SELECT * FROM warns 
+    WHERE id = @id;
+`);
+
+const getWarnCountsForGuildStmt = db.prepare(`
+    SELECT user_id, COUNT(*) as count
+    FROM warns
+    WHERE guild_id = @guild_id
+    GROUP BY user_id;
+`);
+
 const countWarnsStmt = db.prepare(`
     SELECT COUNT(*) as count 
     FROM warns 
@@ -37,13 +49,6 @@ const deleteWarnsOlderThanStmt = db.prepare(`
     WHERE timestamp < @timestamp;
 `);
 
-const getWarnCountsForGuildStmt = db.prepare(`
-    SELECT user_id, COUNT(*) as count
-    FROM warns
-    WHERE guild_id = @guild_id
-    GROUP BY user_id;
-`);
-
 // Function to add a new warning
 function addWarn(guildId, userId, moderatorId, reason) {
     insertWarnStmt.run({
@@ -61,6 +66,16 @@ function getWarns(guildId, userId) {
         guild_id: guildId,
         user_id: userId
     });
+}
+
+// Function to get a warning by its ID
+function getWarnById(id) {
+    return getWarnByIdStmt.get({ id });
+}
+
+// Function to get all warned users and their warn count for a guild
+function getWarnCountsForGuild(guildId) {
+    return getWarnCountsForGuildStmt.all({ guild_id: guildId });
 }
 
 // Function to get the count of warnings for a user in a guild
@@ -82,7 +97,8 @@ function deleteWarnsByUser(guildId, userId) {
 
 // Function to delete a warning by its ID
 function deleteWarnById(id) {
-    deleteWarnByIdStmt.run({ id });
+    const info = deleteWarnByIdStmt.run({ id });
+    return info.changes;
 }
 
 // Function to delete warnings older than a certain timestamp
@@ -90,14 +106,10 @@ function deleteWarnsOlderThan(timestamp) {
     deleteWarnsOlderThanStmt.run({ timestamp });
 }
 
-// Function to get all warned users and their warn count for a guild
-function getWarnCountsForGuild(guildId) {
-    return getWarnCountsForGuildStmt.all({ guild_id: guildId });
-}
-
 module.exports = {
     addWarn,
     getWarns,
+    getWarnById,
     countWarns,
     deleteWarnsByUser,
     deleteWarnById,
