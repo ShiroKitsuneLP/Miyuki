@@ -110,7 +110,6 @@ module.exports = {
                 })] });
                 return;
             }
-
         } catch (error) {
             await interaction.editReply({ embeds: [createErrorEmbed(miyuki, {
                 description: 'An error occurred while processing your request.'

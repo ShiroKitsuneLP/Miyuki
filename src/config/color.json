@@ -3,7 +3,7 @@
         "default": "#CCE0E9",
         "success": "#90EE90",
         "error": "#FF6B6B",
-        "warning": "#FF9830"
+        "warn": "#FF9830"
     },
     "colors": {
         "black": "#000000",

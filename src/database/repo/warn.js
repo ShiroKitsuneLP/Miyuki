@@ -1,0 +1,106 @@
+// Import necessary modules
+const path = require('path');
+
+// Import database connection
+const { db } = require(path.join(__dirname, './../db'));
+
+// Prepare statements
+const insertWarnStmt = db.prepare(`
+    INSERT INTO warns (guild_id, user_id, moderator_id, reason, timestamp) 
+    VALUES (@guild_id, @user_id, @moderator_id, @reason, @timestamp);
+`);
+
+const getWarnsStmt = db.prepare(`
+    SELECT * FROM warns 
+    WHERE guild_id = @guild_id AND user_id = @user_id 
+    ORDER BY timestamp DESC;
+`);
+
+const countWarnsStmt = db.prepare(`
+    SELECT COUNT(*) as count 
+    FROM warns 
+    WHERE guild_id = @guild_id AND user_id = @user_id;
+`);
+
+const deleteWarnsByUserStmt = db.prepare(`
+    DELETE FROM warns 
+    WHERE guild_id = @guild_id AND user_id = @user_id;
+`);
+
+const deleteWarnByIdStmt = db.prepare(`
+    DELETE FROM warns 
+    WHERE id = @id;
+`);
+
+const deleteWarnsOlderThanStmt = db.prepare(`
+    DELETE FROM warns 
+    WHERE timestamp < @timestamp;
+`);
+
+const getWarnCountsForGuildStmt = db.prepare(`
+    SELECT user_id, COUNT(*) as count
+    FROM warns
+    WHERE guild_id = @guild_id
+    GROUP BY user_id;
+`);
+
+// Function to add a new warning
+function addWarn(guildId, userId, moderatorId, reason) {
+    insertWarnStmt.run({
+        guild_id: guildId,
+        user_id: userId,
+        moderator_id: moderatorId,
+        reason: reason,
+        timestamp: Date.now()
+    });
+}
+
+// Function to get all warnings for a user in a guild
+function getWarns(guildId, userId) {
+    return getWarnsStmt.all({
+        guild_id: guildId,
+        user_id: userId
+    });
+}
+
+// Function to get the count of warnings for a user in a guild
+function countWarns(guildId, userId) {
+    const row = countWarnsStmt.get({
+        guild_id: guildId,
+        user_id: userId
+    });
+    return row ? row.count : 0;
+}
+
+// Function to delete all warnings for a user in a guild
+function deleteWarnsByUser(guildId, userId) {
+    deleteWarnsByUserStmt.run({
+        guild_id: guildId,
+        user_id: userId
+    });
+}
+
+// Function to delete a warning by its ID
+function deleteWarnById(id) {
+    deleteWarnByIdStmt.run({ id });
+}
+
+// Function to delete warnings older than a certain timestamp
+function deleteWarnsOlderThan(timestamp) {
+    deleteWarnsOlderThanStmt.run({ timestamp });
+}
+
+// Function to get all warned users and their warn count for a guild
+function getWarnCountsForGuild(guildId) {
+    return getWarnCountsForGuildStmt.all({ guild_id: guildId });
+}
+
+module.exports = {
+    addWarn,
+    getWarns,
+    countWarns,
+    deleteWarnsByUser,
+    deleteWarnById,
+    deleteWarnsOlderThan,
+    getWarnCountsForGuild
+}

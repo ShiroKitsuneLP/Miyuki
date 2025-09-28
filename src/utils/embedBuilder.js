@@ -96,8 +96,37 @@ function createErrorEmbed(client, options = {}) {
     });
 }
 
+// Function to create a warn embed
+function createWarnEmbed(client, options = {}) {
+    return createMiyukiEmbed(client, {
+        color: miyukiColors.warn,
+        title: 'User Warned',
+        description: `${options.user} has been warned.`,
+        fields: [
+            { name: 'Reason', value: options.reason || 'No reason provided', inline: false },
+            { name: 'Total Warns', value: `${options.warnCount}`, inline: true },
+            { name: 'Moderator', value: `<@${options.moderator.id}>`, inline: true }
+        ]
+    });
+}
+
+// Function to create a DM warn embed
+function createDMWarnEmbed(client, options = {}) {
+    return createMiyukiEmbed(client, {
+        color: miyukiColors.warn,
+        title: 'You have been warned',
+        description: `You have received a warning in **${options.guild.name}**.`,
+        fields: [
+            { name: 'Reason', value: options.reason || 'No reason provided', inline: false },
+            { name: 'Moderator', value: `<@${options.moderator.id}>`, inline: true }
+        ]
+    });
+}
+
 module.exports = {
     createMiyukiEmbed,
     createSuccessEmbed,
-    createErrorEmbed
+    createErrorEmbed,
+    createWarnEmbed,
+    createDMWarnEmbed
 }
