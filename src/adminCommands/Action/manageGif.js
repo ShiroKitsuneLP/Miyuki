@@ -18,7 +18,8 @@ const actions = [
     'bite',
     'hug',
     'kiss',
-    'pat'
+    'pat',
+    'slap'
 ];
 
 // Function to check if a string is a valid URL
