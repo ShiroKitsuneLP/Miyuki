@@ -12,14 +12,14 @@ const { actiongif } = require(path.join(__dirname, './../../database/repo'));
 
 module.exports = {
     data: new SlashCommandBuilder()
-        .setName('kiss')
-        .setDescription('Kiss someone!')
+        .setName('bite')
+        .setDescription('Bite someone!')
         .addUserOption(opt => 
             opt.setName('target')
-               .setDescription('The user to kiss')
+                .setDescription('The user to bite')
                 .setRequired(true)
         ),
-    usage: '/kiss <target>',
+    usage: '/bite <target>',
     async execute(interaction, miyuki) {
 
         // Get target user and sender
@@ -30,49 +30,49 @@ module.exports = {
         if (!target) {
             return interaction.reply({ embeds: [createErrorEmbed(miyuki, {
                 title: 'User Not Found',
-                description: 'Please specify a valid user to kiss.'
+                description: 'Please specify a valid user to bite.'
             })] });
         }
 
-        // Prevent users from kissing themselves
+        // Prevent users from biting themselves
         if (target.id === sender.id) {
             return interaction.reply({ embeds: [createErrorEmbed(miyuki, {
-                title: 'Cannot Kiss Yourself',
-                description: 'Oops! You can\'t kiss yourself, silly! \n Try kissing someone else~'
+                title: 'Cannot Bite Yourself',
+                description: 'Oops! You can\'t bite yourself, silly! \n Try biting someone else~'
             })] });
         }
 
-        // Array of kiss messages
-        const kissMsgs = [
-            `${sender} gives ${target} a sweet kiss! Mwah~`,
-            `${sender} gently kisses ${target} on the cheek!`,
-            `${sender} pulls ${target} in for a tender kiss. Feeling the love?`,
-            `${sender} gives ${target} a loving kiss. You're not alone!`,
-            `${sender} kisses ${target}. There, there, everything will be okay!`
+        // Array of bite messages
+        const biteMsgs = [
+            `${sender} playfully bites ${target}! Nom nom~`,
+            `${sender} gives ${target} a gentle nibble!`,
+            `${sender} bites ${target} softly. Feeling the love?`,
+            `${sender} gives ${target} a cute little bite. You're not alone!`,
+            `${sender} bites ${target}. There, there, everything will be okay!`
         ];
 
-        // Select a random kiss message
-        const randomKissMsg = kissMsgs[Math.floor(Math.random() * kissMsgs.length)];
+        // Select a random bite message
+        const randomBiteMsg = biteMsgs[Math.floor(Math.random() * biteMsgs.length)];
 
-        // Fetch a random kiss GIF from the database and check if one exists
-        const gifObj = actiongif.getRandomGif('kiss');
+        // Fetch a random bite GIF from the database and check if one exists
+        const gifObj = actiongif.getRandomGif('bite');
 
         if (!gifObj) {
             return interaction.reply({ embeds: [createErrorEmbed(miyuki, {
                 title: 'No GIFs Available',
-                description: 'No kiss GIFs are available at the moment.'
+                description: 'No bite GIFs are available at the moment.'
             })] });
         }
 
         const gifId = gifObj.id;
         const gifUrl = gifObj.url;
 
-        // send the kiss embed
+        // send the bite embed
         await interaction.reply({ embeds: [createMiyukiEmbed(miyuki, {
-            title: 'Kiss!',
-            description: randomKissMsg,
+            title: 'Bite!',
+            description: randomBiteMsg,
             image: gifUrl,
-            footer: { text: `Pat provided by Miyuki | GIF ID: ${gifId ?? 'unknown'}`, iconURL: miyuki.user.displayAvatarURL() }
+            footer: { text: `Bite provided by Miyuki | GIF ID: ${gifId ?? 'unknown'}`, iconURL: miyuki.user.displayAvatarURL() }
         })] });
     }
 }

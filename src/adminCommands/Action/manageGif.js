@@ -15,6 +15,7 @@ const { ownerIds } = require(path.join(__dirname, './../../config/config.json'))
 
 // Available actions
 const actions = [
+    'bite',
     'hug',
     'kiss',
     'pat'
