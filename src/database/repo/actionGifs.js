@@ -46,7 +46,7 @@ const getRandomGifByActionStmt = db.prepare(`
     LIMIT 1;
 `);
 
-const deleteActionGifByIdStmt = db.prepare(`
+const removeActionGifByIdStmt = db.prepare(`
     DELETE FROM action_gifs 
     WHERE id = @id;
 `);
@@ -96,9 +96,9 @@ function getRandomGif(action) {
     return getRandomGifByActionStmt.get({ action });
 }
 
-// Function to delete an action GIF by ID and reload cache
+// Function to remove an action GIF by ID and reload cache
 function removeById(id) {
-    const changes = deleteActionGifByIdStmt.run({ id }).changes;
+    const changes = removeActionGifByIdStmt.run({ id }).changes;
     reloadCache();
     return changes;
 }

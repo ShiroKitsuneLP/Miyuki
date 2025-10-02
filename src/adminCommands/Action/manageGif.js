@@ -1,5 +1,5 @@
 // Import nessessary discord.js modules
-const { SlashCommandBuilder, PermissionFlagsBits } = require('discord.js');
+const { SlashCommandBuilder, PermissionFlagsBits, MessageFlags } = require('discord.js');
 
 // Import necessary modules
 const path = require('path');
@@ -103,9 +103,6 @@ module.exports = {
     usage: '/managegif <add|show|showall|remove> [options]',
     async execute(interaction, miyuki) {
 
-        // Defer the reply to allow more time for processing
-        await interaction.deferReply();
-
         // Check if the user is an owner
         if(!ownerIds.includes(interaction.user.id)) {
             return interaction.reply({ embeds: [createErrorEmbed(miyuki, {
@@ -113,6 +110,9 @@ module.exports = {
                 description: 'You do not have permission to use this command.'
             })] });
         }
+
+        // Defer the reply to allow more time for processing
+        await interaction.deferReply();
 
         // Get the subcommand
         const subcommand = interaction.options.getSubcommand(false);
@@ -129,7 +129,7 @@ module.exports = {
                         { name: 'Show All GIFs', value: '`/managegif showall [page:<page>]` \n Show all action gifs in the database.', inline: false },
                         { name: 'Remove a GIF', value: '`/managegif remove id:<id>` \n Remove an action gif by its ID.', inline: false }
                     ]
-                })], ephemeral: true });
+                })], flags: MessageFlags.Ephemeral });
             }
 
             // Add a GIF to the database

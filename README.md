@@ -9,6 +9,18 @@
     while her secret self watches over the server from the shadows.</i>
 </div>
 
+<h2 align="center">✨ Invite Miyuki! ✨</h2>
+
+<p align="center">
+    <a href="https://discord.com/oauth2/authorize?client_id=1414723598282658024&permissions=4011018418126839&integration_type=0&scope=bot">
+        <img src="https://img.shields.io/badge/Invite%20Miyuki-5865F2?logo=discord&logoColor=white&style=for-the-badge" />
+    </a>
+</p>
+<p align="center">
+    <b>⚠️ Note:</b> Miyuki currently requests all permissions except <b>Administrator</b>.<br>
+    This will be adjusted to only the necessary permissions after the development and testing phase is complete.
+</p>
+
 <h2 align="center">✨ Features ✨</h2>
 
 ### 🤗 Action Commands
@@ -18,75 +30,11 @@
 ### 🛡️ Moderation
 - Advanced warn system with automatic cleanup (old warnings vanish like fox tracks in the snow)
 - Automatic cleanup of old warnings (180 days)
+- Chat filter for unwanted content (bad links and NSFW links)
 
 ### 🧰 Utility
 - /help: See all commands
 - /ping: Check bot latency
-
-
-<h2 align="center">📦 Requirements</h2>
-
-- [Node.js](https://nodejs.org/) v22 or higher
-- [npm](https://www.npmjs.com/get-npm) v11 or higher
-
-**npm packages:**
-- `discord.js`
-- `better-sqlite3`
-
-
-<h2 align="center">🚀 Getting Started</h2>
-
-```powershell
-git clone https://github.com/ShiroKitsuneLP/Miyuki.git
-cd Miyuki
-npm install
-```
-
-1. Create your `config.json` in the `src/config` folder (see below).
-2. Setup better-sqlite3 Database with the following command:
-   ```powershell
-   npm run database:setup
-   ```
-3. Deploy the commands:
-   ```powershell
-   npm run deploy:guild
-   npm run deploy:admin
-   ```
-4. Start the bot:
-     ```powershell
-     npm run start
-     ```
-
-<h2 align="center">⚙️ Configuration</h2>
-
-**src/config/config.json**
-```json
-{
-    "ownerIds": [
-        "YOUR_ID"
-    ],
-    "mainBot": {
-        "token": "YOUR_BOT_TOKEN",
-        "clientId": "YOUR_CLIENT_ID",
-        "guildId": "YOUR_GUILD_ID"
-    },
-    "adminBot": {
-        "token": "YOUR_ADMIN_BOT_TOKEN",
-        "clientId": "YOUR_ADMIN_CLIENT_ID",
-        "guildId": "YOUR_ADMIN_GUILD_ID"
-    },
-    "links": {
-        "invite": "YOUR_BOT_INVITE_LINK",
-        "supportServer": "YOUR_SUPPORT_SERVER_LINK",
-        "website": "YOUR_WEBSITE_LINK"
-    }
-}
-```
-
-<h2 align="center">🗃️ Database</h2>
-
-- Uses [better-sqlite3](https://github.com/WiseLibs/better-sqlite3)
-- Database file: `src/data/miyuki.db`
 
 <h2 align="center">🤝 Contributing</h2>
 
@@ -95,5 +43,5 @@ Pull requests and issues are welcome! Let your creativity run wild – foxes lov
 ---
 
 <div align="center">
-    Made with ❤️ and fox magic by ShiroKitsune
+    Made with ❤️ and fox magic by Shiro
 </div>

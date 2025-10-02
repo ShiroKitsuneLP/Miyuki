@@ -7,8 +7,8 @@ const path = require('path');
 // Import embedBuilder
 const { createMiyukiEmbed, createErrorEmbed } = require(path.join(__dirname, './../../utils/embedBuilder'));
 
-// Import actiongif database repo
-const { actiongif } = require(path.join(__dirname, './../../database/repo'));
+// Import actionGif database repo
+const { actionGif } = require(path.join(__dirname, './../../database/repo'));
 
 module.exports = {
     data: new SlashCommandBuilder()
@@ -56,7 +56,7 @@ module.exports = {
         const randomSlapMsg = slapMsgs[Math.floor(Math.random() * slapMsgs.length)];
 
         // Fetch a random slap GIF from the database and check if one exists
-        const gifObj = actiongif.getRandomGif('slap');
+        const gifObj = actionGif.getRandomGif('slap');
 
         if (!gifObj) {
             return interaction.reply({ embeds: [createErrorEmbed(miyuki, {
