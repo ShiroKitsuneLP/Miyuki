@@ -91,7 +91,9 @@ function createErrorEmbed(client, options = {}) {
         thumbnail: options.thumbnail,
         fields: options.fields,
         image: options.image,
-        footer: options.footer,
+        footer: options.showPrivacyFooter
+            ? { text: 'This Error was logged and will be deleted after the issue is solved.' }
+            : options.footer,
         timestamp: options.timestamp
     });
 }

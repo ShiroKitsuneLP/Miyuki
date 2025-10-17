@@ -30,7 +30,6 @@
 ### 🛡️ Moderation
 - Advanced warn system with automatic cleanup (old warnings vanish like fox tracks in the snow)
 - Automatic cleanup of old warnings (180 days)
-- Chat filter for unwanted content (bad links and NSFW links)
 
 ### 🧰 Utility
 - /help: See all commands

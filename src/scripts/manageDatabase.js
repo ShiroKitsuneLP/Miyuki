@@ -17,6 +17,8 @@ function dropTable(tableName) {
 // Function to reset Database (drops all tables)
 function resetTable() {
     db.exec(`DROP TABLE IF EXISTS action_gifs;`);
+    db.exec(`DROP TABLE IF EXISTS error_logs;`);
+    db.exec(`DROP TABLE IF EXISTS warns;`);
 
     console.log('[Database] All tables dropped successfully.');
 }

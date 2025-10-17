@@ -3,13 +3,13 @@ const path = require('path');
 
 // Import schema setup functions
 const { setupActionGifSchema } = require(path.join(__dirname, './actionGif'));
-const { setupChatFilterSchema } = require(path.join(__dirname, './chatFilter'));
+const { setupErrorLogSchema } = require(path.join(__dirname, './errorLog'));
 const { setupWarnSchema } = require(path.join(__dirname, './warn'));
 
 // Function to setup database schema
 function setupSchema() {
     setupActionGifSchema();
-    setupChatFilterSchema();
+    setupErrorLogSchema();
     setupWarnSchema();
 }
 
