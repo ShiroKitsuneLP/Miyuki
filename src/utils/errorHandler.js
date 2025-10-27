@@ -2,10 +2,10 @@
 const path = require('path');
 
 // Import errorLog database repo
-const { logError } = require(path.join(__dirname, '../database/repo/errorLog'));
+const { logError, errorLogExists } = require(path.join(__dirname, '../database/repo/errorLog'));
 
 // Centralized error handler
-function errorHandler(error, { guildId = null, userId = null, command = null, context = null } = {}) {
+function errorHandler(error, { command = null } = {}) {
 	let errorMessage, stackTrace;
 
 	if (typeof error === 'string') {
@@ -19,8 +19,10 @@ function errorHandler(error, { guildId = null, userId = null, command = null, co
 		stackTrace = null;
 	}
 
-	// Log to database
-	logError(guildId, userId, command, context, errorMessage, stackTrace);
+	// Log only if not already present
+	if (!errorLogExists(command, errorMessage, stackTrace)) {
+		logError(command, errorMessage, stackTrace);
+	}
 }
 
 module.exports = { errorHandler }

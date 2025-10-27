@@ -5,14 +5,20 @@ const path = require('path');
 const { db } = require(path.join(__dirname, './../db'));
 
 // Prepare statements
+const existsErrorLogStmt = db.prepare(`
+    SELECT 1 FROM error_logs
+    WHERE command = @command AND error_message = @error_message AND stack_trace = @stack_trace
+    LIMIT 1;
+`);
+
 const insertErrorLog = db.prepare(`
-    INSERT INTO error_logs (guild_id, user_id, command, context, error_message, stack_trace, timestamp)
-    VALUES (@guild_id, @user_id, @command, @context, @error_message, @stack_trace, @timestamp)
+    INSERT INTO error_logs (command, error_message, stack_trace, timestamp)
+    VALUES (@command, @error_message, @stack_trace, @timestamp)
 `);
 
 const listErrorLogsStmt = db.prepare(`
     SELECT * FROM error_logs
-    ORDER BY timestamp DESC
+    ORDER BY id
     LIMIT @limit OFFSET @offset;
 `);
 
@@ -30,17 +36,24 @@ const clearErrorLogsStmt = db.prepare(`
     DELETE FROM error_logs;
 `);
 
-// Function to log an error
-function logError(guildId, userId, command, context, errorMessage, stackTrace) {
-    insertErrorLog.run({
-        guild_id: guildId,
-        user_id: userId,
-        command: command,
-        context: context,
+function errorLogExists(command, errorMessage, stackTrace) {
+    return !!existsErrorLogStmt.get({
+        command,
         error_message: errorMessage,
-        stack_trace: stackTrace,
-        timestamp: Date.now()
+        stack_trace: stackTrace
     });
+}
+
+// Function to log an error only if not already present
+function logError(command, errorMessage, stackTrace) {
+    if (!errorLogExists(command, errorMessage, stackTrace)) {
+        insertErrorLog.run({
+            command: command,
+            error_message: errorMessage,
+            stack_trace: stackTrace,
+            timestamp: Date.now()
+        });
+    }
 }
 
 // Function to list error logs with pagination
@@ -62,6 +75,7 @@ function clearErrorLogs() {
 }
 
 module.exports = {
+    errorLogExists,
     logError,
     listErrorLogs,
     getErrorLogById,

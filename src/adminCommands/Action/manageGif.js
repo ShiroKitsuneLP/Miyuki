@@ -1,5 +1,5 @@
 // Import nessessary discord.js modules
-const { SlashCommandBuilder, PermissionFlagsBits, MessageFlags } = require('discord.js');
+const { SlashCommandBuilder, PermissionFlagsBits } = require('discord.js');
 
 // Import necessary modules
 const path = require('path');
@@ -7,8 +7,11 @@ const path = require('path');
 // Import embedBuilder
 const { createMiyukiEmbed, createSuccessEmbed, createErrorEmbed } = require(path.join(__dirname, './../../utils/embedBuilder'));
 
-// Import actiongif database repo
-const { actiongif } = require(path.join(__dirname, './../../database/repo'));
+// Import error handler
+const { errorHandler } = require(path.join(__dirname, './../../utils/errorHandler'));
+
+// Import actionGif database repo
+const { actionGif } = require(path.join(__dirname, './../../database/repo'));
 
 // Import owner IDs
 const { ownerIds } = require(path.join(__dirname, './../../config/config.json'));
@@ -118,19 +121,6 @@ module.exports = {
         const subcommand = interaction.options.getSubcommand(false);
 
         try {
-            if(!subcommand) {
-                return interaction.editReply({ embeds: [createMiyukiEmbed(miyuki, {
-                    title: 'Manage GIFs Help',
-                    description: 'Here are the available subcommands for managing action gifs:',
-                    fields: [
-                        { name: 'Add a GIF', value: '`/managegif add action:<action> url:<url>` \n Add a new action gif to the database.', inline: false },
-                        { name: 'Show GIFs by Action', value: '`/managegif show action:<action> [page:<page>]` \n Show all gifs for a specific action.', inline: false },
-                        { name: 'Show GIF by ID', value: '`/managegif showid id:<id>` \n Show a specific action gif by its ID.', inline: false },
-                        { name: 'Show All GIFs', value: '`/managegif showall [page:<page>]` \n Show all action gifs in the database.', inline: false },
-                        { name: 'Remove a GIF', value: '`/managegif remove id:<id>` \n Remove an action gif by its ID.', inline: false }
-                    ]
-                })], flags: MessageFlags.Ephemeral });
-            }
 
             // Add a GIF to the database
             if(subcommand === 'add') {
@@ -144,7 +134,7 @@ module.exports = {
                     })] });
                 }
 
-                actiongif.addGif(action, url);
+                actionGif.addGif(action, url);
 
                 return interaction.editReply({ embeds: [createSuccessEmbed(miyuki, {
                     title: 'GIF Added',
@@ -161,7 +151,7 @@ module.exports = {
                 const action = interaction.options.getString('action', true);
                 const page = interaction.options.getInteger('page') || 1;
 
-                const gifs = actiongif.listActionGifs(action, 10, page);
+                const gifs = actionGif.listActionGifs(action, 10, page);
 
                 if(!gifs.length) {
                     return interaction.editReply({ embeds: [createMiyukiEmbed(miyuki, {
@@ -182,7 +172,7 @@ module.exports = {
             if(subcommand === 'showid') {
                 const id = interaction.options.getString('id', true).trim();
 
-                const gifObj = actiongif.getGifById(id);
+                const gifObj = actionGif.getGifById(id);
 
                 if (!gifObj) {
                     return interaction.editReply({ embeds: [createErrorEmbed(miyuki, {
@@ -209,7 +199,7 @@ module.exports = {
             if(subcommand === 'showall') {
                 const page = interaction.options.getInteger('page') || 1;
 
-                const gifs = actiongif.listAllGifs(10, page);
+                const gifs = actionGif.listAllGifs(10, page);
 
                 if(!gifs.length) {
                     return interaction.editReply({ embeds: [createMiyukiEmbed(miyuki, {
@@ -228,7 +218,7 @@ module.exports = {
             if(subcommand === 'remove') {
                 const id = interaction.options.getString('id', true).trim();
 
-                const changes = actiongif.removeById(id);
+                const changes = actionGif.removeById(id);
 
                 if(!changes) {
                     return interaction.editReply({ embeds: [createErrorEmbed(miyuki, {
@@ -243,9 +233,13 @@ module.exports = {
                 })] });
             }
         } catch (error) {
-            console.error(`[ERROR] Error executing managegif command`);
-            console.error(error);
+            
+            // Log the error in the database
+            errorHandler(error, {
+                command: 'managegif',
+            });
 
+            // Send error embed
             return interaction.editReply({ embeds: [createErrorEmbed(miyuki, {
                 description: 'An error occurred while executing the command. Please try again later.'
             })] });
