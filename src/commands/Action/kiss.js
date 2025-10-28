@@ -7,8 +7,25 @@ const path = require('path');
 // Import embedBuilder
 const { createMiyukiEmbed, createErrorEmbed } = require(path.join(__dirname, './../../utils/embedBuilder'));
 
+// Import error handler
+const { errorHandler } = require(path.join(__dirname, './../../utils/errorHandler'));
+
 // Import actionGif database repo
 const { actionGif } = require(path.join(__dirname, './../../database/repo'));
+
+// Array of kiss messages
+const kissMsgs = [
+    (sender, target) => `${sender} gives ${target} a sweet kiss! Mwah~`,
+    (sender, target) => `${sender} gently kisses ${target} on the cheek!`,
+    (sender, target) => `${sender} pulls ${target} in for a tender kiss. Feeling the love?`,
+    (sender, target) => `${sender} gives ${target} a loving kiss. You're not alone!`,
+    (sender, target) => `${sender} kisses ${target}. There, there, everything will be okay!`,
+    (sender, target) => `${sender} places a soft kiss on ${target}'s forehead! So much love!`,
+    (sender, target) => `${sender} gives ${target} a passionate kiss! Stay warm!`,
+    (sender, target) => `${sender} pulls ${target} close for a romantic kiss! You're special!`,
+    (sender, target) => `${sender} gives ${target} a playful kiss! Careful now!`,
+    (sender, target) => `${sender} steals a quick kiss from ${target}! Surprise!`
+];
 
 module.exports = {
     data: new SlashCommandBuilder()
@@ -16,7 +33,7 @@ module.exports = {
         .setDescription('Kiss someone!')
         .addUserOption(opt => 
             opt.setName('target')
-               .setDescription('The user to kiss')
+                .setDescription('The user to kiss')
                 .setRequired(true)
         ),
     category: 'Action',
@@ -43,37 +60,51 @@ module.exports = {
             })] });
         }
 
-        // Array of kiss messages
-        const kissMsgs = [
-            `${sender} gives ${target} a sweet kiss! Mwah~`,
-            `${sender} gently kisses ${target} on the cheek!`,
-            `${sender} pulls ${target} in for a tender kiss. Feeling the love?`,
-            `${sender} gives ${target} a loving kiss. You're not alone!`,
-            `${sender} kisses ${target}. There, there, everything will be okay!`
-        ];
+        // Defer reply to allow more time for processing
+        await interaction.deferReply();
 
-        // Select a random kiss message
-        const randomKissMsg = kissMsgs[Math.floor(Math.random() * kissMsgs.length)];
+        try {
 
-        // Fetch a random kiss GIF from the database and check if one exists
-        const gifObj = actionGif.getRandomGif('kiss');
+            // Select a random kiss message
+            const randomKissMsg = kissMsgs[Math.floor(Math.random() * kissMsgs.length)](sender, target);
 
-        if (!gifObj) {
-            return interaction.reply({ embeds: [createErrorEmbed(miyuki, {
-                title: 'No GIFs Available',
-                description: 'No kiss GIFs are available at the moment.'
+            // Fetch a kiss GIF from the database and check if one exists
+            const gifObj = await actionGif.getRandomGif('kiss');
+
+            if (!gifObj) {
+                return interaction.editReply({ embeds: [createErrorEmbed(miyuki, {
+                    title: 'No Kiss GIFs Found',
+                    description: 'No kiss GIFs are available at the moment. Please try again later.'
+                })] });
+            }
+
+            const gifId = gifObj?.id;
+            const gifUrl = gifObj?.url;
+
+            // Send the kiss embed
+            return interaction.editReply({ embeds: [createMiyukiEmbed(miyuki, {
+                description: randomKissMsg,
+                image: gifUrl,
+                footer: { text: `GIF ID: ${gifId}` }
             })] });
+
+        } catch (error) {
+
+            // Log error in database
+            errorHandler(error, {
+                command: 'kiss'
+            });
+
+            try {
+
+                // Send an error embed
+                return interaction.editReply({ embeds: [createErrorEmbed(miyuki, {
+                    description: 'An unexpected error occurred while processing your request. The incident has been logged.'
+                })] });
+                
+            } catch (err) {
+                // Fallback
+            }
         }
-
-        const gifId = gifObj.id;
-        const gifUrl = gifObj.url;
-
-        // send the kiss embed
-        await interaction.reply({ embeds: [createMiyukiEmbed(miyuki, {
-            title: 'Kiss!',
-            description: randomKissMsg,
-            image: gifUrl,
-            footer: { text: `Pat provided by Miyuki | GIF ID: ${gifId ?? 'unknown'}`, iconURL: miyuki.user.displayAvatarURL() }
-        })] });
     }
 }

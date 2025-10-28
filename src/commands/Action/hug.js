@@ -7,8 +7,25 @@ const path = require('path');
 // Import embedBuilder
 const { createMiyukiEmbed, createErrorEmbed } = require(path.join(__dirname, './../../utils/embedBuilder'));
 
+// Import error handler
+const { errorHandler } = require(path.join(__dirname, './../../utils/errorHandler'));
+
 // Import actionGif database repo
 const { actionGif } = require(path.join(__dirname, './../../database/repo'));
+
+// Array of hug messages
+const hugMsgs = [
+    (sender, target) => `${sender} gives ${target} a big warm hug! There, there~`,
+    (sender, target) => `${sender} wraps their arms around ${target} in a comforting hug!`,
+    (sender, target) => `${sender} pulls ${target} into a tight hug. Feeling better now?`,
+    (sender, target) => `${sender} gives ${target} a gentle hug. You're not alone!`,
+    (sender, target) => `${sender} hugs ${target}. There, there, everything will be okay!`,
+    (sender, target) => `${sender} squeezes ${target} in a loving hug! So much love!`,
+    (sender, target) => `${sender} gives ${target} a cozy hug! Stay warm!`,
+    (sender, target) => `${sender} wraps ${target} in a big hug! You're special!`,
+    (sender, target) => `${sender} pulls ${target} close for a heartfelt hug! Feel the love!`,
+    (sender, target) => `${sender} gives ${target} a playful hug! Careful now!`
+];
 
 module.exports = {
     data: new SlashCommandBuilder()
@@ -16,7 +33,7 @@ module.exports = {
         .setDescription('Hug someone!')
         .addUserOption(opt => 
             opt.setName('target')
-               .setDescription('The user to hug')
+                .setDescription('The user to hug')
                 .setRequired(true)
         ),
     category: 'Action',
@@ -43,37 +60,51 @@ module.exports = {
             })] });
         }
 
-        // Array of hug messages
-        const hugMsgs = [
-            `${sender} gives ${target} a big warm hug! There, there~`,
-            `${sender} wraps their arms around ${target} in a comforting hug!`,
-            `${sender} pulls ${target} into a tight hug. Feeling better now?`,
-            `${sender} gives ${target} a gentle hug. You're not alone!`,
-            `${sender} hugs ${target}. There, there, everything will be okay!`
-        ];
+        // Defer the reply to have more time
+        await interaction.deferReply();
 
-        // Select a random hug message
-        const randomHugMsg = hugMsgs[Math.floor(Math.random() * hugMsgs.length)];
+        try {
 
-        // Fetch a random hug GIF from the database and check if one exists
-        const gifObj = actionGif.getRandomGif('hug');
+            // Select a random hug message
+            const randomHugMsg = hugMsgs[Math.floor(Math.random() * hugMsgs.length)](sender, target);
 
-        if (!gifObj) {
-            return interaction.reply({ embeds: [createErrorEmbed(miyuki, {
-                title: 'No GIFs Available',
-                description: 'No hug GIFs are available at the moment. Please try again later.'
+            // Fetch a random hug GIF from the database and check if one exists
+            const gifObj = await actionGif.getRandomGif('hug');
+
+            if (!gifObj) {
+                return interaction.editReply({ embeds: [createErrorEmbed(miyuki, {
+                    title: 'No GIF Found',
+                    description: 'No hug GIFs are available at the moment. Please try again later.'
+                })] });
+            }
+
+            const gifId = gifObj?.id;
+            const gifUrl = gifObj?.url;
+
+            // Send the hug embed
+            return interaction.editReply({ embeds: [createMiyukiEmbed(miyuki, {
+                description: randomHugMsg,
+                image: gifUrl,
+                footer: { text: `GIF ID: ${gifId}` }
             })] });
+
+        } catch (error) {
+
+            // Log error in database
+            errorHandler(error, {
+                command: 'hug'
+            });
+
+            try {
+
+                // Send error embed
+                return interaction.editReply({ embeds: [createErrorEmbed(miyuki, {
+                    description: 'Sorry, an error occurred while trying to hug the user. Please try again later.'
+                })] });
+
+            } catch (err) {
+                // Fallback
+            }
         }
-
-        const gifId = gifObj?.id;
-        const gifUrl = gifObj?.url;
-
-        // Send the hug embed
-        await interaction.reply({ embeds: [createMiyukiEmbed(miyuki, {
-            title: 'A Sweet Hug!',
-            description: randomHugMsg,
-            image: gifUrl,
-            footer: { text: `Hug provided by Miyuki | GIF ID: ${gifId ?? 'unknown'}`, iconURL: miyuki.user.displayAvatarURL() }
-        })] });
     }
 }

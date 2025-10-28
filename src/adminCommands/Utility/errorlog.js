@@ -63,7 +63,7 @@ module.exports = {
             })] });
         }
 
-        // Defer the reply to allow more time for processing
+        // Defer reply to allow more time for processing
         await interaction.deferReply();
 
         // Get the subcommand
@@ -188,14 +188,21 @@ module.exports = {
 
         } catch (error) {
 
-            // Log the error in the database
+            // Log error in database
             errorHandler(error, {
                 command: 'errorlog'
             });
 
-            return interaction.editReply({ embeds: [createErrorEmbed(miyuki, {
-                description: 'An error occurred while fetching error logs. Please try again later.'
-            })] });
+            try {
+
+                // Send error embed
+                return interaction.editReply({ embeds: [createErrorEmbed(miyuki, {
+                    description: 'An unexpected error occurred while executing the command. The error has been logged.'
+                })] });
+
+            } catch (err) {
+                // Fallback
+            }
         }
     }
 }
