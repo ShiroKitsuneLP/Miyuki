@@ -7,13 +7,13 @@ const { db } = require(path.join(__dirname, './../db'));
 // Prepare statements
 const existsErrorLogStmt = db.prepare(`
     SELECT 1 FROM error_logs
-    WHERE command = @command AND error_message = @error_message AND stack_trace = @stack_trace
+    WHERE context = @context AND file = @file AND error_message = @error_message AND stack_trace = @stack_trace
     LIMIT 1;
 `);
 
 const insertErrorLog = db.prepare(`
-    INSERT INTO error_logs (command, error_message, stack_trace, timestamp)
-    VALUES (@command, @error_message, @stack_trace, @timestamp)
+    INSERT INTO error_logs (context, file, error_message, stack_trace, timestamp)
+    VALUES (@context, @file, @error_message, @stack_trace, @timestamp)
 `);
 
 const listErrorLogsStmt = db.prepare(`
@@ -36,19 +36,21 @@ const clearErrorLogsStmt = db.prepare(`
     DELETE FROM error_logs;
 `);
 
-function errorLogExists(command, errorMessage, stackTrace) {
+function errorLogExists(context, file, errorMessage, stackTrace) {
     return !!existsErrorLogStmt.get({
-        command,
+        context,
+        file,
         error_message: errorMessage,
         stack_trace: stackTrace
     });
 }
 
 // Function to log an error only if not already present
-function logError(command, errorMessage, stackTrace) {
-    if (!errorLogExists(command, errorMessage, stackTrace)) {
+function logError(context, file, errorMessage, stackTrace) {
+    if (!errorLogExists(context, file, errorMessage, stackTrace)) {
         insertErrorLog.run({
-            command: command,
+            context: context,
+            file: file,
             error_message: errorMessage,
             stack_trace: stackTrace,
             timestamp: Date.now()

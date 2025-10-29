@@ -28,8 +28,8 @@
 - Fun, interactive, and anime-inspired
 
 ### 🛡️ Moderation
-- Advanced warn system with automatic cleanup (old warnings vanish like fox tracks in the snow)
-- Automatic cleanup of old warnings (180 days)
+- Advanced warn system with automatic cleanup of old warnings after 180 days (old warnings vanish like fox tracks in the snow)
+- Clear warns automatically when a user is banned
 
 ### 🧰 Utility
 - /help: See all commands

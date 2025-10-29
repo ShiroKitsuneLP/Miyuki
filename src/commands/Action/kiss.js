@@ -92,7 +92,8 @@ module.exports = {
 
             // Log error in database
             errorHandler(error, {
-                command: 'kiss'
+                context: 'Command',
+                file: 'kiss'
             });
 
             try {

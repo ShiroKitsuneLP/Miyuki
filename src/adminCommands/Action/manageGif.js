@@ -236,7 +236,8 @@ module.exports = {
             
             // Log error in database
             errorHandler(error, {
-                command: 'managegif'
+                context: 'Command',
+                file: 'managegif'
             });
 
             try {

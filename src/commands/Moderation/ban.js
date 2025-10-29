@@ -5,31 +5,28 @@ const { SlashCommandBuilder, PermissionFlagsBits } = require('discord.js');
 const path = require('path');
 
 // Import embedBuilder
-const { createErrorEmbed, createWarnEmbed, createDMWarnEmbed } = require(path.join(__dirname, './../../utils/embedBuilder'));
+const { createMiyukiEmbed, createErrorEmbed, createSuccessEmbed } = require(path.join(__dirname, './../../utils/embedBuilder'));
 
 // Import error handler
 const { errorHandler } = require(path.join(__dirname, './../../utils/errorHandler'));
 
-// Import warn database repo
-const { warn } = require(path.join(__dirname, './../../database/repo'));
-
 module.exports = {
     data: new SlashCommandBuilder()
-        .setName('warn')
-        .setDescription('Warn a user')
-        .setDefaultMemberPermissions(PermissionFlagsBits.KickMembers)
+        .setName('ban')
+        .setDescription('Ban a user from the server')
+        .setDefaultMemberPermissions(PermissionFlagsBits.BanMembers)
         .addUserOption(opt => 
             opt.setName('user')
-                .setDescription('The user to warn')
+                .setDescription('The user to ban')
                 .setRequired(true)
         )
         .addStringOption(opt => 
             opt.setName('reason')
-                .setDescription('The reason for the warning')
+                .setDescription('The reason for the ban')
                 .setRequired(false)
         ),
     category: 'Moderation',
-    usage: '/warn <user> [reason]',
+    usage: '/ban <user> [reason]',
     async execute(interaction, miyuki) {
 
         // Ensure the command is used in a guild
@@ -49,43 +46,43 @@ module.exports = {
         // Check if user is miyuki
         if (user.id === miyuki.user.id) {
             return interaction.reply({ embeds: [createErrorEmbed(miyuki, {
-                title: 'You cannot warn Miyuki',
-                description: 'Miyuki is a good bot and does not deserve to be warned.'
+                title: 'You cannot ban Miyuki',
+                description: 'Miyuki is a good bot and does not deserve to be banned.'
             })] });
         }
 
         // Check if user is a bot
         if (user.bot) {
             return interaction.reply({ embeds: [createErrorEmbed(miyuki, {
-                title: 'You cannot warn bots',
-                description: 'Bots cannot be warned. Please try warning a human user.'
+                title: 'You cannot ban bots',
+                description: 'Bots cannot be banned. Please try banning a human user.'
             })] });
         }
 
         // Check if user is moderator
         if (user.id === moderator.id) {
             return interaction.reply({ embeds: [createErrorEmbed(miyuki, {
-                title: 'You cannot warn yourself',
-                description: 'You cannot warn yourself. Please try warning another user.'
+                title: 'You cannot ban yourself',
+                description: 'Moderators cannot ban themselves.'
             })] });
         }
 
         // Check if user is same or higher role than moderator
-        const memberToWarn = await guild.members.fetch(user.id);
+        const memberToBan = await guild.members.fetch(user.id);
         const moderatorMember = await guild.members.fetch(moderator.id);
 
-        if (memberToWarn.roles.highest.position >= moderatorMember.roles.highest.position) {
+        if (memberToBan.roles.highest.position >= moderatorMember.roles.highest.position) {
             return interaction.reply({ embeds: [createErrorEmbed(miyuki, {
-                title: 'You cannot warn this user',
-                description: 'You cannot warn this user because they have the same or higher role than you.'
+                title: 'You cannot ban this user',
+                description: 'You cannot ban this user because they have the same or higher role than you.'
             })] });
         }
 
-        // check if user has admin permissions
-        if (memberToWarn.permissions.has(PermissionFlagsBits.Administrator)) {
+        // Check if user has admin permissions
+        if (memberToBan.permissions.has(PermissionFlagsBits.Administrator)) {
             return interaction.reply({ embeds: [createErrorEmbed(miyuki, {
-                title: 'You cannot warn admins',
-                description: 'Administrators cannot be warned. Please try warning a non-admin user.'
+                title: 'You cannot ban admins',
+                description: 'Administrators cannot be banned. Please try banning a non-admin user.'
             })] });
         }
 
@@ -94,25 +91,30 @@ module.exports = {
 
         try {
 
-            // Add warning to database
-            warn.addWarn(guild.id, user.id, moderator.id, reason);
-
-            const warnCount = warn.countWarns(guild.id, user.id);
+            // Ban the user
+            await guild.members.ban(user.id, { 
+                reason: `Banned by ${moderator.tag} | Reason: ${reason}` 
+            });
 
             // Send success embed
-            await interaction.editReply({ embeds: [createWarnEmbed(miyuki, {
-                user,
-                moderator,
-                reason,
-                warnCount
+            await interaction.editReply({ embeds: [createSuccessEmbed(miyuki, {
+                title: 'User Banned',
+                description: `<@${user.id}> has been banned from the server.`,
+                fields: [
+                    { name: 'Reason', value: reason, inline: false },
+                    { name: 'Moderator', value: `<@${moderator.id}>`, inline: true }
+                ]
             })] });
 
-            // Try to send DM to warned user
+            // Try to send DM to banned user
             try {
-                await user.send({ embeds: [createDMWarnEmbed(miyuki, {
-                    guild,
-                    moderator,
-                    reason
+                await user.send({ embeds: [createMiyukiEmbed(miyuki, {
+                    title: `You have been banned from ${guild.name}`,
+                    description: `If you have any questions, please contact the server staff.`,
+                    fields: [
+                        { name: 'Reason', value: reason, inline: false },
+                        { name: 'Moderator', value: `<@${moderator.id}>`, inline: true }
+                    ]
                 })] });
 
             } catch (dmError) {
@@ -123,7 +125,7 @@ module.exports = {
             // Log error in database
             errorHandler(error, {
                 context: 'Command',
-                file: 'warn'
+                file: 'ban'
             });
 
             try {

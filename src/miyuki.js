@@ -17,7 +17,9 @@ require(path.join(__dirname, './database/db'));
 const miyuki = new Client({
     intents: [
         GatewayIntentBits.Guilds,
+        GatewayIntentBits.GuildMembers,
         GatewayIntentBits.GuildMessages,
+        GatewayIntentBits.GuildModeration,
         GatewayIntentBits.MessageContent
     ]
 });

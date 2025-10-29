@@ -2,10 +2,10 @@
 const path = require('path');
 
 // Import errorLog database repo
-const { logError, errorLogExists } = require(path.join(__dirname, '../database/repo/errorLog'));
+const { errorLog } = require(path.join(__dirname, '../database/repo'));
 
 // Centralized error handler
-function errorHandler(error, { command = null } = {}) {
+function errorHandler(error, { context = null, file = null } = {}) {
 	let errorMessage, stackTrace;
 
 	if (typeof error === 'string') {
@@ -20,8 +20,8 @@ function errorHandler(error, { command = null } = {}) {
 	}
 
 	// Log only if not already present
-	if (!errorLogExists(command, errorMessage, stackTrace)) {
-		logError(command, errorMessage, stackTrace);
+	if (!errorLog.errorLogExists(context, file, errorMessage, stackTrace)) {
+		errorLog.logError(context, file, errorMessage, stackTrace);
 	}
 }
 

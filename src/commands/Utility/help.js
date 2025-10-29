@@ -122,7 +122,8 @@ module.exports = {
 
             // Log error in database
             errorHandler(error, {
-                command: 'help'
+                context: 'command',
+                file: 'help'
             });
 
             try {

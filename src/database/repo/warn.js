@@ -12,8 +12,7 @@ const insertWarnStmt = db.prepare(`
 
 const getWarnsStmt = db.prepare(`
     SELECT * FROM warns 
-    WHERE guild_id = @guild_id AND user_id = @user_id 
-    ORDER BY timestamp DESC;
+    WHERE guild_id = @guild_id AND user_id = @user_id;
 `);
 
 const getWarnByIdStmt = db.prepare(`

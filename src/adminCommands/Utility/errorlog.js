@@ -109,7 +109,7 @@ module.exports = {
 
                 const lines = logsToShow.map(log => {
                     const date = new Date(log.timestamp).toLocaleString();
-                    return `**ID:** ${log.id} | **Command:** ${log.command} | **Time:** ${date}`;
+                    return `**ID:** ${log.id} | **${log.context}:** ${log.file} | **Time:** ${date}`;
                 });
 
                 // Send the embed message with error logs
@@ -141,7 +141,7 @@ module.exports = {
                 return interaction.editReply({ embeds: [createMiyukiEmbed(miyuki, {
                     title: `Error Log ID: ${log.id}`,
                     fields: [
-                        { name: 'Command', value: log.command || 'N/A' },
+                        { name: log.context, value: log.file || 'N/A' },
                         { name: 'Timestamp', value: log.timestamp ? new Date(log.timestamp).toLocaleString() : 'N/A' },
                         { name: 'Error Message', value: log.error_message ? String(log.error_message).slice(0, 1000) : 'N/A' },
                         { name: 'Stack Trace', value: log.stack_trace ? `\`\`\`${String(log.stack_trace).slice(0, 1000)}\`\`\`` : 'N/A' }
@@ -190,7 +190,8 @@ module.exports = {
 
             // Log error in database
             errorHandler(error, {
-                command: 'errorlog'
+                context: 'Command',
+                file: 'errorlog'
             });
 
             try {

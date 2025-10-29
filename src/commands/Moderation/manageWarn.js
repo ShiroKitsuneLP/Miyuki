@@ -232,7 +232,8 @@ module.exports = {
 
             // Log error in database
             errorHandler(error, {
-                command: 'manageWarn'
+                context: 'Command',
+                file: 'manageWarn'
             });
 
             try {

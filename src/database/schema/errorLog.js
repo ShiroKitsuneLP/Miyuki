@@ -9,7 +9,8 @@ function setupErrorLogSchema() {
     db.exec(`
         CREATE TABLE IF NOT EXISTS error_logs (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
-            command TEXT,
+            context TEXT,
+            file TEXT,
             error_message TEXT NOT NULL,
             stack_trace TEXT,
             timestamp INTEGER NOT NULL
