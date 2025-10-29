@@ -1,18 +1,21 @@
-// Import nessesary discord.js modules
-const { SlashCommandBuilder, MessageFlags } = require("discord.js");
+// Import necessary discord.js modules
+const { SlashCommandBuilder } = require('discord.js');
 
 // Import necessary modules
-const fs = require("fs");
+const fs = require('fs');
 const path = require('path');
 
 // Import embedBuilder
 const { createMiyukiEmbed, createErrorEmbed } = require(path.join(__dirname, './../../utils/embedBuilder'));
 
+// Import error handler
+const { errorHandler } = require(path.join(__dirname, './../../utils/errorHandler'));
+
 module.exports = {
     data: new SlashCommandBuilder()
         .setName('help')
-        .setDescription('Provides information about Miyuki and its commands.')
-        .addStringOption(opt =>
+        .setDescription('Provides a list of available commands or detailed info about a specific command.')
+        .addStringOption(opt => 
             opt.setName('query')
                 .setDescription('Category or command name')
                 .setRequired(false)
@@ -21,15 +24,15 @@ module.exports = {
     usage: '/help [Category or Command]',
     async execute(interaction, miyuki) {
 
-        // Defer the reply to allow more time for processing
-        await interaction.deferReply();
-
-        // Get the query option if provided
+        // Get query option if provided
         const query = interaction.options.getString('query');
 
-    // Define paths to commands folders
-    const commandsPath = path.join(__dirname, './..');
-    const categories = fs.readdirSync(commandsPath).filter(file => fs.lstatSync(path.join(commandsPath, file)).isDirectory());
+        // Define paths to commands folders
+        const commandsPath = path.join(__dirname, './..');
+        const categories = fs.readdirSync(commandsPath).filter(file => fs.lstatSync(path.join(commandsPath, file)).isDirectory());
+
+        // Defer the reply to allow more time for processing
+        await interaction.deferReply();
 
         try {
 
@@ -58,14 +61,16 @@ module.exports = {
                     description: 'Here\'s an overview of all command categories. To see the commands within a specific category, use `/help [Category]`',
                     fields: categoryFields
                 })] });
+
                 return;
             }
 
+            const lowerCaseQuery = query.toLowerCase();
+
             // Check if the query matches a category
-            const matchedCategory = categories.find(cat => cat.toLowerCase() === query.toLowerCase());
+            const matchedCategory = categories.find(cat => cat.toLowerCase() === lowerCaseQuery);
 
             if (matchedCategory) {
-
                 const commandFields = [];
 
                 // if a category is matched, list all commands in that category
@@ -88,14 +93,15 @@ module.exports = {
                 // Send the embed message for commands in the matched category
                 await interaction.editReply({ embeds: [createMiyukiEmbed(miyuki, {
                     title: `Commands in ${matchedCategory}`,
-                    description: `Here\'s a list of all commands in the ${matchedCategory} category.`,
+                    description: 'Here\'s a list of all commands in this category:',
                     fields: commandFields
                 })] });
+
                 return;
             }
 
-            // Check if the query matches a command
-            const command = miyuki.commands.get(query.toLowerCase()) || miyuki.commands.find(cmd => cmd.data.name.toLowerCase() === query.toLowerCase());
+            // Check if the query matches a specific command
+            const command = miyuki.commands.get(lowerCaseQuery) || miyuki.commands.find(cmd => cmd.data.name.toLowerCase() === lowerCaseQuery);
 
             if (command) {
 
@@ -108,13 +114,27 @@ module.exports = {
                         { name: 'Usage', value: command.usage || 'No usage information available.' }
                     ]
                 })] });
+
                 return;
             }
+
         } catch (error) {
-            await interaction.editReply({ embeds: [createErrorEmbed(miyuki, {
-                description: 'An error occurred while processing your request.'
-            })], flags: MessageFlags.Ephemeral });
-            console.error('Error executing help command:', error);
+
+            // Log error in database
+            errorHandler(error, {
+                command: 'help'
+            });
+
+            try {
+
+                // Send error embed
+                return interaction.editReply({ embeds: [createErrorEmbed(miyuki, {
+                    description: 'An unexpected error occurred while executing the command. Please try again later.'
+                })] });
+
+            } catch (err) {
+                // Fallback
+            }
         }
     }
 }
