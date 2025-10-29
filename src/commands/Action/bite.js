@@ -69,7 +69,7 @@ module.exports = {
             const randomBiteMsg = biteMsgs[Math.floor(Math.random() * biteMsgs.length)](sender, target);
 
             // Fetch a random bite GIF from the database and check if one exists
-            const gifObj = await actionGif.getRandomGif('bite');
+            const gifObj = actionGif.getRandomGif('bite');
 
             if (!gifObj) {
                 return interaction.editReply({ embeds: [createErrorEmbed(miyuki, {
@@ -99,7 +99,7 @@ module.exports = {
 
                 // Send error embed
                 return interaction.editReply({ embeds: [createErrorEmbed(miyuki, {
-                    description: 'An error occurred while executing the command. Please try again later.'
+                    description: 'An unexpected error occurred while executing the command. Please try again later.'
                 })] });
 
             } catch (err) {

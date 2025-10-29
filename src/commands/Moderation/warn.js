@@ -1,11 +1,14 @@
 // Import necessary discord.js modules
-const { SlashCommandBuilder, PermissionFlagsBits, MessageFlags } = require("discord.js");
+const { SlashCommandBuilder, PermissionFlagsBits } = require('discord.js');
 
 // Import necessary modules
-const path = require("path");
+const path = require('path');
 
 // Import embedBuilder
 const { createErrorEmbed, createWarnEmbed, createDMWarnEmbed } = require(path.join(__dirname, './../../utils/embedBuilder'));
+
+// Import error handler
+const { errorHandler } = require(path.join(__dirname, './../../utils/errorHandler'));
 
 // Import warn database repo
 const { warn } = require(path.join(__dirname, './../../database/repo'));
@@ -15,12 +18,12 @@ module.exports = {
         .setName('warn')
         .setDescription('Warn a user')
         .setDefaultMemberPermissions(PermissionFlagsBits.KickMembers)
-        .addUserOption(opt =>
+        .addUserOption(opt => 
             opt.setName('user')
                 .setDescription('The user to warn')
                 .setRequired(true)
-            )
-        .addStringOption(opt =>
+        )
+        .addStringOption(opt => 
             opt.setName('reason')
                 .setDescription('The reason for the warning')
                 .setRequired(false)
@@ -34,12 +37,12 @@ module.exports = {
             return interaction.reply({ embeds: [createErrorEmbed(miyuki, {
                 title: 'Guild Only Command',
                 description: 'This command can only be used in a server.'
-            })], flags: MessageFlags.Ephemeral });
+            })] });
         }
 
         // Get command options
         const user = interaction.options.getUser('user');
-        const reason = interaction.options.getString('reason');
+        const reason = interaction.options.getString('reason') || 'No reason provided';
         const guild = interaction.guild;
         const moderator = interaction.user;
 
@@ -48,53 +51,55 @@ module.exports = {
             return interaction.reply({ embeds: [createErrorEmbed(miyuki, {
                 title: 'You cannot warn Miyuki',
                 description: 'Miyuki is a good bot and does not deserve to be warned.'
-            })], flags: MessageFlags.Ephemeral });
+            })] });
         }
 
         // Check if user is a bot
         if (user.bot) {
             return interaction.reply({ embeds: [createErrorEmbed(miyuki, {
-                title: 'You cannot warn a bot',
-                description: 'Bots cannot be warned.'
-            })], flags: MessageFlags.Ephemeral });
+                title: 'Cannot Warn Bots',
+                description: 'Bots cannot be warned. Please try warning a human user.'
+            })] });
         }
 
         // Check if user is moderator
         if (user.id === moderator.id) {
             return interaction.reply({ embeds: [createErrorEmbed(miyuki, {
-                title: 'You cannot warn yourself',
-                description: 'You cannot warn yourself.'
-            })], flags: MessageFlags.Ephemeral });
+                title: 'Cannot Warn Yourself',
+                description: 'You cannot warn yourself. Please try warning another user.'
+            })] });
         }
 
         // Check if user is same or higher role than moderator
-        const targetMember = await guild.members.fetch(user.id);
+        const memberToWarn = await guild.members.fetch(user.id);
         const moderatorMember = await guild.members.fetch(moderator.id);
 
-        if (targetMember.roles.highest.position === moderatorMember.roles.highest.position) {
+        if (memberToWarn.roles.highest.position >= moderatorMember.roles.highest.position) {
             return interaction.reply({ embeds: [createErrorEmbed(miyuki, {
                 title: 'Cannot Warn User',
-                description: 'You cannot warn a user with the same role as you.'
-            })], flags: MessageFlags.Ephemeral });
+                description: 'You cannot warn this user because they have the same or higher role than you.'
+            })] });
         }
 
-        if (targetMember.roles.highest.position > moderatorMember.roles.highest.position) {
+        // check if user has admin permissions
+        if (memberToWarn.permissions.has(PermissionFlagsBits.Administrator)) {
             return interaction.reply({ embeds: [createErrorEmbed(miyuki, {
-                title: 'Cannot Warn User',
-                description: 'You cannot warn a user with a higher role than you.'
-            })], flags: MessageFlags.Ephemeral });
+                title: 'Cannot Warn Admins',
+                description: 'Administrators cannot be warned. Please try warning a non-admin user.'
+            })] });
         }
 
-        // Defer the reply to allow more time for processing
+        // Defer reply to allow more time for processing
         await interaction.deferReply();
 
         try {
 
             // Add warning to database
-            warn.addWarn(guild.id, user.id, moderator.id, reason || 'No reason provided');
+            warn.addWarn(guild.id, user.id, moderator.id, reason);
+
             const warnCount = warn.countWarns(guild.id, user.id);
 
-            // Send warn embed
+            // Send success embed
             await interaction.editReply({ embeds: [createWarnEmbed(miyuki, {
                 user,
                 moderator,
@@ -102,24 +107,34 @@ module.exports = {
                 warnCount
             })] });
 
-            // Try to DM the user
+            // Try to send DM to warned user
             try {
                 await user.send({ embeds: [createDMWarnEmbed(miyuki, {
                     guild,
                     moderator,
                     reason
                 })] });
-            } catch (error) {
-                // DMs closed
+
+            } catch (dmError) {
+                // DM are closed
             }
+        } catch (error) {
 
-        } catch (error)  {
-            console.error('[Error] Error executing warn command');
-            console.error(error);
+            // Log error in database
+            errorHandler(error, {
+                command: 'warn'
+            });
 
-            return interaction.editReply({ embeds: [createErrorEmbed(miyuki, {
-                description: 'An error occurred while trying to warn the user. Please try again later.'
-            })], flags: MessageFlags.Ephemeral });
+            try {
+
+                // Send error embed
+                return interaction.editReply({ embeds: [createErrorEmbed(miyuki, {
+                    description: 'An unexpected error occurred while executing the command. Please try again later.'
+                })] });
+
+            } catch (err) {
+                // Fallback
+            }
         }
     }
 }

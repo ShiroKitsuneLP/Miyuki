@@ -197,7 +197,7 @@ module.exports = {
 
                 // Send error embed
                 return interaction.editReply({ embeds: [createErrorEmbed(miyuki, {
-                    description: 'An unexpected error occurred while executing the command. The error has been logged.'
+                    description: 'An unexpected error occurred while executing the command. Please try again later.'
                 })] });
 
             } catch (err) {

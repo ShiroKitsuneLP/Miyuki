@@ -24,7 +24,7 @@ module.exports = {
                 title: 'Thank you for choosing Miyuki!',
                 description: `Hello! I'm Miyuki, your helpful companion on Discord. Thank you for inviting me to **${guild.name}**! \n\nI'm here to bring some fun and useful tools to your server. Let's make your community even better together! ❤️`,
                 fields: [
-                    { name: 'Getting Started', value: 'To get started, you can use the `/help` command to see a list of all my available commands and features. If you need any assistance or have questions, feel free to reach out!' },
+                    { name: 'Getting Started', value: 'To get started, you can use `/help` to see a list of all my available commands and features. If you need any assistance or have questions, feel free to reach out!' },
 
                     // Spacer
                     { name: '', value: '' },

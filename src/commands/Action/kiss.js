@@ -69,7 +69,7 @@ module.exports = {
             const randomKissMsg = kissMsgs[Math.floor(Math.random() * kissMsgs.length)](sender, target);
 
             // Fetch a kiss GIF from the database and check if one exists
-            const gifObj = await actionGif.getRandomGif('kiss');
+            const gifObj = actionGif.getRandomGif('kiss');
 
             if (!gifObj) {
                 return interaction.editReply({ embeds: [createErrorEmbed(miyuki, {
@@ -97,9 +97,9 @@ module.exports = {
 
             try {
 
-                // Send an error embed
+                // Send error embed
                 return interaction.editReply({ embeds: [createErrorEmbed(miyuki, {
-                    description: 'An unexpected error occurred while processing your request. The incident has been logged.'
+                    description: 'An unexpected error occurred while executing the command. Please try again later.'
                 })] });
                 
             } catch (err) {

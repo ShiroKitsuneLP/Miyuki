@@ -69,7 +69,7 @@ module.exports = {
             const randomSlapMsg = slapMsgs[Math.floor(Math.random() * slapMsgs.length)](sender, target);
 
             // Fetch a random slap GIF from the database and check if one exists
-            const gifObj = await actionGif.getRandomGif('slap');
+            const gifObj = actionGif.getRandomGif('slap');
 
             if (!gifObj) {
                 return interaction.editReply({ embeds: [createErrorEmbed(miyuki, {
@@ -97,9 +97,9 @@ module.exports = {
 
             try {
 
-                // Send error embed to user
-                await interaction.editReply({ embeds: [createErrorEmbed(miyuki, {
-                    description: 'Sorry, something went wrong while trying to slap that user. Please try again later!'
+                // Send error embed
+                return interaction.editReply({ embeds: [createErrorEmbed(miyuki, {
+                    description: 'An unexpected error occurred while executing the command. Please try again later.'
                 })] });
 
             } catch (err) {

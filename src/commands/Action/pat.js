@@ -69,7 +69,7 @@ module.exports = {
             const randomPatMsg = patMsgs[Math.floor(Math.random() * patMsgs.length)](sender, target);
 
             // Fetch a random pat GIF from the database and check if one exists
-            const gifObj = await actionGif.getRandomGif('pat');
+            const gifObj = actionGif.getRandomGif('pat');
 
             if (!gifObj) {
                 return interaction.editReply({ embeds: [createErrorEmbed(miyuki, {
@@ -99,7 +99,7 @@ module.exports = {
 
                 // Send error embed
                 return interaction.editReply({ embeds: [createErrorEmbed(miyuki, {
-                    description: 'An unexpected error occurred while executing the command. The error has been logged.'
+                    description: 'An unexpected error occurred while executing the command. Please try again later.'
                 })] });
 
             } catch (err) {

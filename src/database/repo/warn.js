@@ -34,7 +34,7 @@ const countWarnsStmt = db.prepare(`
     WHERE guild_id = @guild_id AND user_id = @user_id;
 `);
 
-const deleteWarnsByUserStmt = db.prepare(`
+const clearWarnsByUserStmt = db.prepare(`
     DELETE FROM warns 
     WHERE guild_id = @guild_id AND user_id = @user_id;
 `);
@@ -84,15 +84,18 @@ function countWarns(guildId, userId) {
         guild_id: guildId,
         user_id: userId
     });
+    
     return row ? row.count : 0;
 }
 
 // Function to delete all warnings for a user in a guild
-function deleteWarnsByUser(guildId, userId) {
-    deleteWarnsByUserStmt.run({
+function clearWarnsByUser(guildId, userId) {
+    const info = clearWarnsByUserStmt.run({
         guild_id: guildId,
         user_id: userId
     });
+
+    return info.changes;
 }
 
 // Function to delete a warning by its ID
@@ -111,7 +114,7 @@ module.exports = {
     getWarns,
     getWarnById,
     countWarns,
-    deleteWarnsByUser,
+    clearWarnsByUser,
     deleteWarnById,
     deleteWarnsOlderThan,
     getWarnCountsForGuild

@@ -69,7 +69,7 @@ module.exports = {
             const randomHugMsg = hugMsgs[Math.floor(Math.random() * hugMsgs.length)](sender, target);
 
             // Fetch a random hug GIF from the database and check if one exists
-            const gifObj = await actionGif.getRandomGif('hug');
+            const gifObj = actionGif.getRandomGif('hug');
 
             if (!gifObj) {
                 return interaction.editReply({ embeds: [createErrorEmbed(miyuki, {
@@ -99,7 +99,7 @@ module.exports = {
 
                 // Send error embed
                 return interaction.editReply({ embeds: [createErrorEmbed(miyuki, {
-                    description: 'Sorry, an error occurred while trying to hug the user. Please try again later.'
+                    description: 'An unexpected error occurred while executing the command. Please try again later.'
                 })] });
 
             } catch (err) {
