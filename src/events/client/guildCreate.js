@@ -10,6 +10,12 @@ const { createMiyukiEmbed } = require(path.join(__dirname, './../../utils/embedB
 // Import Links from config
 const { links } = require(path.join(__dirname, './../../config/config.json'));
 
+// Import error handler
+const { errorHandler } = require(path.join(__dirname, './../../utils/errorHandler'));
+
+// Import guild settings database repo
+const { guildSettings } = require(path.join(__dirname, './../../database/repo'));
+
 module.exports = {
     name: Events.GuildCreate,
     once: false,
@@ -42,6 +48,19 @@ module.exports = {
             })] });
         } catch (error) {
             // Unable to send DM to the guild owner
+        }
+
+        try {
+
+            // Save guild in database
+            await guildSettings.addGuild(guild.id);
+        } catch (error) {
+
+            // Log error in database
+            errorHandler(error, {
+                context: 'Event',
+                file: 'guildCreate'
+            });
         }
     }
 }

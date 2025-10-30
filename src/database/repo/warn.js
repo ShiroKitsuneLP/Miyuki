@@ -48,6 +48,11 @@ const deleteWarnsOlderThanStmt = db.prepare(`
     WHERE timestamp < @timestamp;
 `);
 
+const clearWarnsByGuildStmt = db.prepare(`
+    DELETE FROM warns 
+    WHERE guild_id = @guild_id;
+`);
+
 // Function to add a new warning
 function addWarn(guildId, userId, moderatorId, reason) {
     insertWarnStmt.run({
@@ -108,6 +113,11 @@ function deleteWarnsOlderThan(timestamp) {
     deleteWarnsOlderThanStmt.run({ timestamp });
 }
 
+function clearWarnsByGuild(guildId) {
+    const info = clearWarnsByGuildStmt.run({ guild_id: guildId });
+    return info.changes;
+}
+
 module.exports = {
     addWarn,
     getWarns,
@@ -116,5 +126,6 @@ module.exports = {
     clearWarnsByUser,
     deleteWarnById,
     deleteWarnsOlderThan,
-    getWarnCountsForGuild
+    getWarnCountsForGuild,
+    clearWarnsByGuild
 }

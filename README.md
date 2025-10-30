@@ -35,6 +35,10 @@
 - /help: See all commands
 - /ping: Check bot latency
 
+### 🛡️ Data Protection & Data Deletion
+
+When Miyuki is removed from a server, all server-related data (like settings and moderation data) is automatically deleted from the database.
+
 <h2 align="center">🤝 Contributing</h2>
 
 Pull requests and issues are welcome! Let your creativity run wild – foxes love clever ideas.
