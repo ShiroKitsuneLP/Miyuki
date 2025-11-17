@@ -16,7 +16,7 @@ module.exports = {
             .setDescription('The user whose avatar you want to get')
             .setRequired(false)
     ),
-    category: 'Utility',
+    category: 'Info',
     usage: '/avatar [user]',
     async execute(interaction, miyuki) {
 

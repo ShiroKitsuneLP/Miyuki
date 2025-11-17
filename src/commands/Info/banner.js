@@ -16,7 +16,7 @@ module.exports = {
                 .setDescription('The user whose banner you want to get')
                 .setRequired(false)
         ),
-    category: 'Utility',
+    category: 'Info',
     usage: '/banner [user]',
     async execute(interaction, miyuki) {
 
