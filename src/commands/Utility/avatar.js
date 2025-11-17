@@ -11,8 +11,8 @@ module.exports = {
     data: new SlashCommandBuilder()
     .setName('avatar')
     .setDescription('Get the avatar of a user')
-    .addUserOption(option => 
-        option.setName('user')
+    .addUserOption(opt => 
+        opt.setName('user')
             .setDescription('The user whose avatar you want to get')
             .setRequired(false)
     ),
@@ -23,6 +23,7 @@ module.exports = {
         // Get the user option if provided, else use the interaction user
         const user = interaction.options.getUser('user') || interaction.user;
 
+        // Send the avatar embed
         return interaction.reply({ embeds: [createMiyukiEmbed(miyuki, {
             title: `${user.username}'s Avatar`,
             image: user.displayAvatarURL({ dynamic: true, size: 2048 })
