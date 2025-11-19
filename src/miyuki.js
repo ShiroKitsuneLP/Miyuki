@@ -19,6 +19,7 @@ const miyuki = new Client({
         GatewayIntentBits.Guilds,
         GatewayIntentBits.GuildMembers,
         GatewayIntentBits.GuildMessages,
+        GatewayIntentBits.GuildMessageReactions,
         GatewayIntentBits.GuildModeration,
         GatewayIntentBits.MessageContent
     ]

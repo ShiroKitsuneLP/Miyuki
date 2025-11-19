@@ -10,7 +10,7 @@ function setupGuildSettingsSchema() {
         CREATE TABLE IF NOT EXISTS guild_settings (
             guild_id TEXT PRIMARY KEY,
             log_channel_id TEXT
-        )
+        );
     `);
 
     console.log('[Database] guild_settings table ready');

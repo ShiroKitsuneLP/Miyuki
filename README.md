@@ -23,17 +23,14 @@
 
 <h2 align="center">✨ Features ✨</h2>
 
-### 🤗 Action Commands
-- Hug, pat, kiss, bite, slap and more – spread the fox love!
-- Fun, interactive, and anime-inspired
+### Reaction Roles
+- Create customizable reaction role messages
+- Add and remove roles with specific emojis
+- Toggle the display of role lists in messages
 
-### 🛡️ Moderation
+### Warn System
 - Advanced warn system with automatic cleanup of old warnings after 180 days (old warnings vanish like fox tracks in the snow)
 - Clear warns automatically when a user is banned
-
-### 🧰 Utility
-- /help: See all commands
-- /ping: Check bot latency
 
 ### 🛡️ Data Protection & Data Deletion
 

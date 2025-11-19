@@ -6,18 +6,37 @@
         "warn": "#FF9830"
     },
     "colors": {
-        "black": "#000000",
-        "blue": "#0000FF",
-        "cyan": "#00FFFF",
-        "green": "#00FF00", 
-        "grey": "#808080",
-        "lime": "#00FF00",
-        "orange": "#FFA500",
-        "pink": "#FFC0CB",
-        "purple": "#800080",
-        "red": "#FF0000",
-        "teal": "#008080",
-        "white": "#FFFFFF",
-        "yellow": "#FFFF00"
+        "red": {
+            "emoji": "🟥",
+            "hex": "#DD2E44"
+        },
+        "orange": {
+            "emoji": "🟧",
+            "hex": "#F4900C"
+        },
+        "yellow": {
+            "emoji": "🟨",
+            "hex": "#FDCB58"
+        },
+        "green": {
+            "emoji": "🟩",
+            "hex": "#78B159"
+        },
+        "blue": {
+            "emoji": "🟦",
+            "hex": "#55ACEE"
+        },
+        "purple": {
+            "emoji": "🟪",
+            "hex": "#AA8ED6"
+        },
+        "black": {
+            "emoji": "⬛",
+            "hex": "#31373D"
+        },
+        "white": {
+            "emoji": "⬜",
+            "hex": "#E6E7E8"
+        }
     }
 }
