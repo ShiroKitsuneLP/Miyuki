@@ -23,12 +23,12 @@
 
 <h2 align="center">✨ Features ✨</h2>
 
-### Reaction Roles
+### 🎭 Reaction Roles
 - Create customizable reaction role messages
 - Add and remove roles with specific emojis
 - Toggle the display of role lists in messages
 
-### Warn System
+### 📝 Warn System
 - Advanced warn system with automatic cleanup of old warnings after 180 days (old warnings vanish like fox tracks in the snow)
 - Clear warns automatically when a user is banned
 
