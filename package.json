@@ -1,0 +1,24 @@
+{
+  "name": "miyuki",
+  "version": "1.0.0",
+  "description": "",
+  "homepage": "https://github.com/ShiroKitsuneLP/Miyuki#readme",
+  "bugs": {
+    "url": "https://github.com/ShiroKitsuneLP/Miyuki/issues"
+  },
+  "license": "ISC",
+  "author": "ShiroKitsune",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ShiroKitsuneLP/Miyuki.git"
+  },
+  "type": "commonjs",
+  "main": "src/miyuki.js",
+  "scripts": {
+    "dev": "nodemon --trace-warnings src/miyuki.js",
+    "start": "node src/miyuki.js"
+  },
+  "dependencies": {
+    "discord.js": "^14.25.1"
+  }
+}
