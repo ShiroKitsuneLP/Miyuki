@@ -8,7 +8,7 @@ const path = require('path');
 const { mainClient, adminClient } = require(path.join(__dirname, './../config/config.json'));
 
 // Import Loader
-const { eventLoader } = require(path.join(__dirname, '/loader'));
+const { commandLoader, eventLoader } = require(path.join(__dirname, '/loader'));
 
 // Intents for Miyuki
 const miyukiIntents = {
@@ -42,6 +42,21 @@ async function startMiyuki() {
     // Create Miyuki's Clients
     const miyuki = createClient(miyukiIntents.main);
     const miyukiAdmin = createClient(miyukiIntents.admin);
+
+    // Check if Client Tokens are provided
+    if (!mainClient.token) {
+        console.error("[Error] Main Client token not found in config.json");
+        process.exit(1);
+    }
+
+    if (!adminClient.token) {
+        console.error("[Error] Admin Client token not found in config.json");
+        process.exit(1);
+    }
+
+    // Load Commands
+    await commandLoader(miyuki, path.resolve(__dirname, '../commands'), 'Miyuki');
+    await commandLoader(miyukiAdmin, path.resolve(__dirname, '../adminCommands'), 'Miyuki Admin');
 
     // Load Events
     await eventLoader(miyuki, path.resolve(__dirname, '../events'), 'Miyuki');
