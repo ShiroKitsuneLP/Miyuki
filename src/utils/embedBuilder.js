@@ -20,7 +20,7 @@ function createMiyukiEmbed(client, options = {}) {
     // Set Embed Color
     embed.setColor(options.color || miyukiColors.default);
 
-    // Set Embed Title if privided
+    // Set Embed Title if provided
     if(options.title) {
         embed.setTitle(options.title);
     }
@@ -36,7 +36,7 @@ function createMiyukiEmbed(client, options = {}) {
         embed.setDescription(options.description || options.desc);
     }
 
-    // Set Thumbnaul if provided
+    // Set Thumbnail if provided
     // Short Version: thumb
     if(options.thumbnail || options.thumb) {
         embed.setThumbnail(options.thumbnail || options.thumb);
@@ -66,9 +66,40 @@ function createMiyukiEmbed(client, options = {}) {
     }
 
     return embed;
+}
 
+// Function to create standardized success embed for Miyuki
+function createSuccessEmbed(client, options = {}) {
+    return createMiyukiEmbed(client, {
+        color: miyukiColors.success,
+        title: options.title || 'Success',
+        url: options.url,
+        description: options.description || options.desc || 'Operation completed successfully.',
+        thumbnail: options.thumbnail || options.thumb,
+        fields: options.fields,
+        image: options.image,
+        footer: options.footer,
+        timestamp: options.timestamp
+    });
+}
+
+// Function to create standardized error embed for Miyuki
+function createErrorEmbed(client, options = {}) {
+    return createMiyukiEmbed(client, {
+        color: miyukiColors.error,
+        title: options.title || 'Error',
+        url: options.url,
+        description: options.description || options.desc || 'An error occurred.',
+        thumbnail: options.thumbnail || options.thumb,
+        fields: options.fields,
+        image: options.image,
+        footer: options.footer,
+        timestamp: options.timestamp
+    });
 }
 
 module.exports = {
-    createMiyukiEmbed
+    createMiyukiEmbed,
+    createSuccessEmbed,
+    createErrorEmbed
 }
