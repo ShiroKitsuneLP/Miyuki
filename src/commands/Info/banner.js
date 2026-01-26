@@ -31,7 +31,7 @@ module.exports = {
         if (!bannerUrl) {
             return interaction.reply({ embeds: [createErrorEmbed(miyuki, {
                 title: 'No Banner Found',
-                description: `${user.username} does not have a banner.`
+                description: user.id === interaction.user.id ? 'You don\'t have a banner.' : `${user.username} doesn't have a banner.`
             })] });
         }
 
