@@ -24,6 +24,9 @@
 
 <h2 align="center">✨ Features ✨</h2>
 
+### 🛠️ Error Logging
+- Comprehensive error logging to help identify and fix issues quickly
+
 <h2 align="center">✨ Planned Features ✨</h2>
 
 - Reaction Roles

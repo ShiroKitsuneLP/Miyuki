@@ -5,7 +5,7 @@ const { Client, GatewayIntentBits } = require('discord.js');
 const path = require('path');
 
 // Import Config
-const { mainClient, adminClient } = require(path.join(__dirname, './../config/config.json'));
+const { mainClient, adminClient } = require(path.resolve(__dirname, '../config/config.json'));
 
 // Import Loader
 const { commandLoader, eventLoader } = require(path.join(__dirname, '/loader'));
