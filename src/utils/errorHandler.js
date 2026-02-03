@@ -20,7 +20,11 @@ async function errorHandler(error, { context = null, file = null } = {}) {
 	}
 
 	// Log Error
-	errorLog.logError(context, file, errorMessage, stackTrace);
+	try {
+		await errorLog.logError(context, file, errorMessage, stackTrace);
+	} catch (error) {
+		console.error('[Database] Couldn\'t Log Error:', error);
+	}
 }
 
 module.exports = { errorHandler }
