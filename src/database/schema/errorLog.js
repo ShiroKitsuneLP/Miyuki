@@ -10,6 +10,7 @@ async function setupErrorLogSchema() {
         CREATE TABLE IF NOT EXISTS error_logs (
             id serial PRIMARY KEY,
             context text,
+            category text,
             file text,
             error_message text NOT NULL,
             stack_trace text,

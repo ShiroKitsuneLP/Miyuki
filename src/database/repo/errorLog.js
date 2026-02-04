@@ -5,25 +5,25 @@ const path = require('path');
 const { db } = require(path.resolve(__dirname, '../db'));
 
 // Function to Check if this Error is already in Database
-async function existsErrorLog(context, file, errorMessage, stackTrace) {
+async function existsErrorLog(context, category, file, errorMessage, stackTrace) {
     const res = await db.query(
         `SELECT 1 FROM error_logs
-        WHERE context = $1 AND file = $2 AND error_message = $3 AND stack_trace = $4
+        WHERE context = $1 AND category = $2 AND file = $3 AND error_message = $4 AND stack_trace = $5
         LIMIT 1;`,
-        [context, file, errorMessage, stackTrace]
+        [context, category, file, errorMessage, stackTrace]
     );
     return res.rowCount > 0;
 }
 
 // Function to Insert ErrorLog in Database
-async function insertErrorLog(context, file, errorMessage, stackTrace, timestamp) {
+async function insertErrorLog(context, category, file, errorMessage, stackTrace, timestamp) {
 
     // Check if this Error is already in Database 
     if (!(await existsErrorLog(context, file, errorMessage, stackTrace))) {
         await db.query(
-            `INSERT INTO error_logs (context, file, error_message, stack_trace, timestamp)
-            VALUES ($1, $2, $3, $4, $5);`,
-            [context, file, errorMessage, stackTrace, timestamp]
+            `INSERT INTO error_logs (context, category, file, error_message, stack_trace, timestamp)
+            VALUES ($1, $2, $3, $4, $5, $6);`,
+            [context, category, file, errorMessage, stackTrace, timestamp]
         );
     }
 }

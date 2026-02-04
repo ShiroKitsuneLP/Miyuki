@@ -7,6 +7,9 @@ const path = require('path');
 // Import embedBuilder
 const { createMiyukiEmbed, createErrorEmbed } = require(path.join(__dirname, './../../utils/embedBuilder'));
 
+// Import error handler
+const { errorHandler } = require(path.resolve(__dirname, '../../utils/errorHandler'));
+
 module.exports = {
     data: new SlashCommandBuilder()
         .setName('banner')
@@ -19,26 +22,38 @@ module.exports = {
     usage: '/banner [User]',
     async execute(interaction, miyuki) {
 
-        // Get the User option if provided
-        let user = interaction.options.getUser('user') || interaction.user;
-        const title = user.id === interaction.user.id ? 'Your Banner' : `${user.username}'s Banner`;
+        try {
 
-        // Fetch the User to get Banner info
-        const fetchedUser = await user.fetch();
-        const bannerUrl = fetchedUser.bannerURL({ size: 2048 });
+            // Get the User option if provided
+            let user = interaction.options.getUser('user') || interaction.user;
+            const title = user.id === interaction.user.id ? 'Your Banner' : `${user.username}'s Banner`;
 
-        // Check if the user has a Banner
-        if (!bannerUrl) {
-            return interaction.reply({ embeds: [createErrorEmbed(miyuki, {
-                title: 'No Banner Found',
-                description: user.id === interaction.user.id ? 'You don\'t have a banner.' : `${user.username} doesn't have a banner.`
-            })] });
-        }
+            // Fetch the User to get Banner info
+            const fetchedUser = await user.fetch();
+            const bannerUrl = fetchedUser.bannerURL({ size: 2048 });
+
+            // Check if the user has a Banner
+            if (!bannerUrl) {
+                return interaction.reply({ embeds: [createErrorEmbed(miyuki, {
+                    title: 'No Banner Found',
+                    description: user.id === interaction.user.id ? 'You don\'t have a banner.' : `${user.username} doesn't have a banner.`
+                })] });
+            }
 
         // Send the Banner Embed
         return interaction.reply({ embeds: [createMiyukiEmbed(miyuki, {
             title: title,
             image: bannerUrl
         })] });
+
+        } catch (error) {
+            await errorHandler(error, {
+                context: 'Command',
+                category: 'Info',
+                file: 'banner',
+                interaction,
+                client: miyuki
+            });
+        }
     }
 }

@@ -7,6 +7,9 @@ const path = require('path');
 // Import embedBuilder
 const { createMiyukiEmbed } = require(path.join(__dirname, './../../utils/embedBuilder'));
 
+// Import error handler
+const { errorHandler } = require(path.resolve(__dirname, '../../utils/errorHandler'));
+
 // Magic 8ball responses
 const responses = [
     'Absolutely~',
@@ -43,19 +46,36 @@ module.exports = {
     usage: '/8ball <question>',
     async execute(interaction, miyuki) {
 
-        // Get the question from options
-        const question = interaction.options.getString('question');
+        // Simulate Thinking
+        await interaction.deferReply();
 
-        // Select a random response
-        const randomResponse = responses[Math.floor(Math.random() * responses.length)];
+        await new Promise(resolve => setTimeout(resolve, 2000));
 
-        // Send the embed reply
-        return interaction.reply({ embeds: [createMiyukiEmbed(miyuki, {
-            title: 'The Magic 8ball',
-            fields: [
-                { name: 'Your Question', value: question },
-                { name: '8ball\'s Answer', value: randomResponse }
-            ]
-        })] });
+        try {
+
+            // Get the question from options
+            const question = interaction.options.getString('question');
+
+            // Select a random response
+            const randomResponse = responses[Math.floor(Math.random() * responses.length)];
+
+            // Send the embed reply
+            return interaction.editReply({ embeds: [createMiyukiEmbed(miyuki, {
+                title: 'The Magic 8ball',
+                fields: [
+                    { name: 'Your Question', value: question },
+                    { name: '8ball\'s Answer', value: randomResponse }
+                ]
+            })] });
+            
+        } catch (error) {
+            await errorHandler(error, {
+                context: 'Command',
+                category: 'Utility',
+                file: '8ball',
+                interaction,
+                client: miyuki
+            });
+        }
     }
 }

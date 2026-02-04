@@ -7,6 +7,9 @@ const path = require('path');
 // Import embedBuilder
 const { createMiyukiEmbed } = require(path.join(__dirname, './../../utils/embedBuilder'));
 
+// Import error handler
+const { errorHandler } = require(path.resolve(__dirname, '../../utils/errorHandler'));
+
 module.exports = {
     data: new SlashCommandBuilder()
         .setName('avatar')
@@ -19,14 +22,26 @@ module.exports = {
     usage: '/avatar [User]',
     async execute(interaction, miyuki) {
 
-        // Get the User option if provided
-        let user = interaction.options.getUser('user') || interaction.user;
-        const title = user.id === interaction.user.id ? 'Your Avatar' : `${user.username}'s Avatar`;
+        try {
 
-        // Send the Avatar Embed
-        return interaction.reply({ embeds: [createMiyukiEmbed(miyuki, {
-            title: title,
-            image: user.displayAvatarURL({ dynamic: true, size: 2048 })
-        })] });
+            // Get the User option if provided
+            let user = interaction.options.getUser('user') || interaction.user;
+            const title = user.id === interaction.user.id ? 'Your Avatar' : `${user.username}'s Avatar`;
+
+            // Send the Avatar Embed
+            return interaction.reply({ embeds: [createMiyukiEmbed(miyuki, {
+                title: title,
+                image: user.displayAvatarURL({ dynamic: true, size: 2048 })
+            })] });
+
+        } catch (error) {
+            await errorHandler(error, {
+                context: 'Command',
+                category: 'Info',
+                file: 'avatar',
+                interaction,
+                client: miyuki
+            });
+        }
     }
 }

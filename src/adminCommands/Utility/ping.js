@@ -7,6 +7,9 @@ const path = require('path');
 // Import embedBuilder
 const { createMiyukiEmbed } = require(path.join(__dirname, './../../utils/embedBuilder'));
 
+// Import error handler
+const { errorHandler } = require(path.resolve(__dirname, '../../utils/errorHandler'));
+
 module.exports = {
     data: new SlashCommandBuilder()
         .setName('ping')
@@ -16,7 +19,7 @@ module.exports = {
     async execute(interaction, miyukiAdmin) {
 
         // Sent initial reply
-        const sent = await interaction.reply({ embeds: [createMiyukiEmbed(miyuki, {
+        const sent = await interaction.reply({ embeds: [createMiyukiEmbed(miyukiAdmin, {
             title: 'Pong!',
             fields: [
                 { name: 'Ping', value: 'Pinging...', inline: true },
@@ -24,19 +27,30 @@ module.exports = {
             ]
         })], withResponse: true });
 
-        // Calculate ping and latency
-        const sentObj = sent.resource.message;
-        const ping = sentObj.createdTimestamp - interaction.createdTimestamp;
-        const latency = Math.round(interaction.client.ws.ping);
+        try {
 
+            // Calculate ping and latency
+            const sentObj = sent.resource.message;
+            const ping = sentObj.createdTimestamp - interaction.createdTimestamp;
+            const latency = Math.round(interaction.client.ws.ping);
 
-        // Update the embed with the Calculated values
-        await interaction.editReply({ embeds: [createMiyukiEmbed(miyukiAdmin, {
-            title: 'Pong!',
-            fields: [
-                { name: 'Ping', value: `${ping}ms`, inline: true },
-                { name: 'API Latency', value: `${latency}ms`, inline: true }
-            ]
-        })] });
+            // Update the embed with the Calculated values
+            await interaction.editReply({ embeds: [createMiyukiEmbed(miyukiAdmin, {
+                title: 'Pong!',
+                fields: [
+                    { name: 'Ping', value: `${ping}ms`, inline: true },
+                    { name: 'API Latency', value: `${latency}ms`, inline: true }
+                ]
+            })] });
+
+        } catch (error) {
+            await errorHandler(error, {
+                context: 'AdminCommand',
+                category: 'Utility',
+                file: 'ping',
+                interaction,
+                client: miyukiAdmin
+            });
+        }
     }
 }

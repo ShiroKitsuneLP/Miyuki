@@ -53,11 +53,11 @@ module.exports = {
         ),
     category: 'Utility',
     usage: '/errorlog <show|showid|remove|clear> [options]',
-    async execute(interaction, miyuki) {
+    async execute(interaction, miyukiAdmin) {
 
         // Check if User is an Owner of Miyuki
         if(!ownerIds.includes(interaction.user.id)) {
-            return interaction.reply({ embeds: [createErrorEmbed(miyuki, {
+            return interaction.reply({ embeds: [createErrorEmbed(miyukiAdmin, {
                 title: 'Permission Denied',
                 desc: 'You are not an Owner of Miyuki.'
             })] });
@@ -88,7 +88,7 @@ module.exports = {
 
                     // Check no Error Log exists
                     if (totalLogs === 0) {
-                        return interaction.editReply({ embeds: [createMiyukiEmbed(miyuki, {
+                        return interaction.editReply({ embeds: [createMiyukiEmbed(miyukiAdmin, {
                             title: 'Error Logs',
                             desc: 'No Error Logs found.',
                             footer: { text: 'Total Logs: 0' }
@@ -99,7 +99,7 @@ module.exports = {
 
                     // Validate Page Number
                     if (page < 1 || page > totalPages) {
-                        return interaction.editReply({ embeds: [createErrorEmbed(miyuki, {
+                        return interaction.editReply({ embeds: [createErrorEmbed(miyukiAdmin, {
                             title: 'Invalid Page Number',
                             desc: `Please provide a valid page number between 1 and ${totalPages}.`
                         })] });
@@ -116,7 +116,7 @@ module.exports = {
                     });
 
                     // Send Embed Message with Error Logs
-                    return await interaction.editReply({ embeds: [createMiyukiEmbed(miyuki, {
+                    return await interaction.editReply({ embeds: [createMiyukiEmbed(miyukiAdmin, {
                         title: `Error Logs (Page ${page} of ${totalPages})`,
                         desc: lines.join('\n'),
                         footer: { text: `Total Logs: ${totalLogs}` }
@@ -133,17 +133,18 @@ module.exports = {
 
                     // Check if the Log exists
                     if (!log) {
-                        return interaction.editReply({ embeds: [createErrorEmbed(miyuki, {
+                        return interaction.editReply({ embeds: [createErrorEmbed(miyukiAdmin, {
                             title: 'Error Log Not Found',
                             desc: `No Error Log found with ID: ${id}.`
                         })] });
                     }
 
                     // Send the Error Log details Embed
-                    return await interaction.editReply({ embeds: [createMiyukiEmbed(miyuki, {
+                    return await interaction.editReply({ embeds: [createMiyukiEmbed(miyukiAdmin, {
                         title: `Error Log ID: ${log.id}`,
                         fields: [
-                            { name: log.context, value: log.file || 'N/A' },
+                            { name: log.category, value: log.context || 'N/A' },
+                            { name: 'File', value: log.file || 'N/A' },
                             { name: 'Timestamp', value: log.timestamp ? new Date(log.timestamp).toLocaleString() : 'N/A' },
                             { name: 'Error Message', value: log.error_message ? String(log.error_message).slice(0, 1000) : 'N/A' },
                             { name: 'Stack Trace', value: log.stack_trace ? `\`\`\`${String(log.stack_trace).slice(0, 1000)}\`\`\`` : 'N/A' }
@@ -161,13 +162,13 @@ module.exports = {
 
                     // Check if any Error Log was deleted
                     if (result.rowCount === 0) {
-                        return interaction.editReply({ embeds: [createErrorEmbed(miyuki, {
+                        return interaction.editReply({ embeds: [createErrorEmbed(miyukiAdmin, {
                             title: 'Error Log Not Found',
                             desc: `No Error Log found with ID: ${id}.`
                         })] });
                     }
 
-                    return await interaction.editReply({ embeds: [createSuccessEmbed(miyuki, {
+                    return await interaction.editReply({ embeds: [createSuccessEmbed(miyukiAdmin, {
                         title: 'Error Log Deleted',
                         desc: `The Error Log with ID ${id} has been successfully deleted.`
                     })] });
@@ -179,35 +180,26 @@ module.exports = {
                     await errorLog.clearErrorLogs();
 
                     // Send success Embed
-                    return await interaction.editReply({ embeds: [createSuccessEmbed(miyuki, {
+                    return await interaction.editReply({ embeds: [createSuccessEmbed(miyukiAdmin, {
                         title: 'Error Logs Cleared',
                         desc: 'All error logs have been successfully cleared from the database.'
                     })] });
                 default:
                     // Fallback
-                   return interaction.editReply({ embeds: [createErrorEmbed(miyuki, {
+                   return interaction.editReply({ embeds: [createErrorEmbed(miyukiAdmin, {
                     title: 'Unknown Subcommand',
                     desc: 'This subcommand does not exist.'
                    })] });
             }
 
         } catch (error) {
-            try {
-                await errorHandler(error, {
-                    context: 'AdminCommand',
-                    file: 'errorLog'
-                });
-
-                try {
-                    await interaction.editReply({ embeds: [createErrorEmbed(miyuki, {
-                        desc: 'An unexpected error occurred while executing the command. Please try again later.'
-                    })] });
-                } catch (err) {
-                    // Fallback
-                }
-            } catch (logError) {
-                console.error('[ErrorHandler] Failed to Log Error: ', logError);
-            }
+            await errorHandler(error, {
+                context: 'AdminCommand',
+                category: 'Utility',
+                file: 'errorLog',
+                interaction,
+                client: miyukiAdmin
+            });
         }
     }
 }
