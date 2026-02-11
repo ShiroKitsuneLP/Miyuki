@@ -52,7 +52,7 @@ module.exports = {
                 .setDescription('Clears all Error logs')
         ),
     category: 'Utility',
-    usage: '/errorlog <show|showid|remove|clear> [options]',
+    usage: '/errorlog <show|showid|remove|clear> [Options]',
     async execute(interaction, miyukiAdmin) {
 
         // Check if User is an Owner of Miyuki
@@ -185,11 +185,12 @@ module.exports = {
                         desc: 'All error logs have been successfully cleared from the database.'
                     })] });
                 default:
+                    
                     // Fallback
-                   return interaction.editReply({ embeds: [createErrorEmbed(miyukiAdmin, {
-                    title: 'Unknown Subcommand',
-                    desc: 'This subcommand does not exist.'
-                   })] });
+                    return interaction.editReply({ embeds: [createErrorEmbed(miyukiAdmin, {
+                        title: 'Unknown Subcommand',
+                        desc: 'This subcommand does not exist.'
+                    })] });
             }
 
         } catch (error) {

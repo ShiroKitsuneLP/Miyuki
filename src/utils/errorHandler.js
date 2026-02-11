@@ -8,8 +8,10 @@ const { errorLog } = require(path.resolve(__dirname, '../database/repo'));
 const { createErrorEmbed } = require( './embedBuilder');
 
 // Centralized error handler
-async function errorHandler(error, { context = null, category = null, file = null, interaction = null, miyuki = null } = {}) {
+async function errorHandler(error, { context = null, category = null, file = null, interaction = null, client = null } = {}) {
 	let errorMessage, stackTrace;
+
+	const timestamp = new Date();
 
 	if (typeof error === 'string') {
 		errorMessage = error;
@@ -24,7 +26,7 @@ async function errorHandler(error, { context = null, category = null, file = nul
 
 	// Log Error
 	try {
-		await errorLog.logError(context, category, file, errorMessage, stackTrace);
+		await errorLog.addErrorLog(context, category, file, errorMessage, stackTrace, timestamp);
 	} catch (error) {
 		console.error('[Database] Failed to Log Error: ', error);
 	}

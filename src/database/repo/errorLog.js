@@ -16,7 +16,7 @@ async function existsErrorLog(context, category, file, errorMessage, stackTrace)
 }
 
 // Function to Insert ErrorLog in Database
-async function insertErrorLog(context, category, file, errorMessage, stackTrace, timestamp) {
+async function addErrorLog(context, category, file, errorMessage, stackTrace, timestamp) {
 
     // Check if this Error is already in Database 
     if (!(await existsErrorLog(context, file, errorMessage, stackTrace))) {
@@ -51,12 +51,12 @@ async function getErrorLogById(id) {
 
 // Function to Rremove ErrorLog by ID
 async function removeErrorLogById(id) {
-    const result = await db.query(
+    const res = await db.query(
         `DELETE FROM error_logs
         WHERE id = $1;`,
         [id]
     );
-    return result;
+    return res;
 }
 
 // Function to Clear all ErrorLogs in Database
@@ -65,7 +65,7 @@ async function clearErrorLogs() {
 }
 
 module.exports = {
-    insertErrorLog,
+    addErrorLog,
     listErrorLogs,
     getErrorLogById,
     removeErrorLogById,

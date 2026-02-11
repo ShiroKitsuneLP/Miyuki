@@ -18,7 +18,7 @@ async function setupErrorLogSchema() {
         );
     `);
 
-    console.log('[Database] error_logs table ready');
+    console.log('[Database] Error Logs table ready');
 }
 
 module.exports = { setupErrorLogSchema }
