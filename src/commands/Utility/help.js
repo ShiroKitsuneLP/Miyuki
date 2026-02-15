@@ -123,7 +123,7 @@ module.exports = {
                 category: 'Utility',
                 file: 'help',
                 interaction,
-                client: miyukiAdmin
+                client: miyuki
             });
         }
     }

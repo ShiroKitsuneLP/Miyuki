@@ -98,6 +98,8 @@ const adminRest = new REST({ version: '10' }).setToken(adminClient.token);
             );
 
             console.log(`[Miyuki Admin] Successfully deployed ${data.length} commands to guild ID ${adminClient.guildId}.`);
+
+            process.exit(0);
         }
 
         // Deploy Commands on a specific Guild
@@ -119,6 +121,8 @@ const adminRest = new REST({ version: '10' }).setToken(adminClient.token);
             );
 
             console.log(`[Miyuki] Successfully deployed ${data.length} commands to guild ID ${mainClient.guildId}.`);
+
+            process.exit(0);
         }
 
         // Deploy Commands Public
@@ -135,6 +139,8 @@ const adminRest = new REST({ version: '10' }).setToken(adminClient.token);
             );
 
             console.log(`[Miyuki] Successfully deployed ${data.length} commands global.`);
+
+            process.exit(0);
         }
     } catch (error) {
         console.error('[Error] Failed to deploy commands:', error);
