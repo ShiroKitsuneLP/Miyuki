@@ -5,7 +5,7 @@ const { SlashCommandBuilder } = require('discord.js');
 const path = require('path');
 
 // Import embedBuilder
-const { createMiyukiEmbed, createErrorEmbed } = require(path.join(__dirname, './../../utils/embedBuilder'));
+const { createMiyukiEmbed, createErrorEmbed } = require(path.resolve(__dirname, '../../utils/embedBuilder'));
 
 // Import error handler
 const { errorHandler } = require(path.resolve(__dirname, '../../utils/errorHandler'));
